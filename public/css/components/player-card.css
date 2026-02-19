@@ -1,0 +1,10 @@
+/* COMPONENT: player-card */
+.player-card { background: var(--white); border-radius: var(--radius-2xl); padding: var(--space-6); text-align: center; box-shadow: var(--shadow-md); transition: var(--bounce); cursor: pointer; position: relative; overflow: hidden; }
+.player-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 70px; background: var(--primary-gradient); }
+.player-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-xl); }
+.player-card__avatar { width: 80px; height: 80px; margin: 0 auto var(--space-4); background: var(--white); border-radius: var(--radius-full); border: 4px solid var(--white); box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; position: relative; z-index: 1; }
+.player-card__name { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--gray-900); margin-bottom: var(--space-2); }
+.player-card__rating { display: inline-flex; align-items: center; gap: var(--space-2); background: #FEF3C7; padding: var(--space-2) var(--space-4); border-radius: var(--radius-full); font-weight: 700; font-size: 0.85rem; margin-bottom: var(--space-4); }
+.player-card__sports { display: flex; justify-content: center; gap: var(--space-2); flex-wrap: wrap; }
+.player-card__sport { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--gray-100); border-radius: var(--radius-lg); font-size: 1.3rem; transition: var(--bounce); }
+.player-card__sport:hover { transform: scale(1.2) rotate(10deg); }

@@ -1,0 +1,10 @@
+/* MODULE: responsive */
+@media (max-width: 768px) {
+  .navbar__menu { display: none; }
+  .navbar__toggle { display: flex; }
+  .hero h1 { font-size: 2rem; }
+  .grid--games { grid-template-columns: 1fr; }
+  .filter-bar { flex-direction: column; }
+  .filter-bar__actions { width: 100%; }
+  .filter-bar__actions .btn { flex: 1; }
+}

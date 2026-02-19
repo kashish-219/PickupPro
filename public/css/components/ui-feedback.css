@@ -1,0 +1,27 @@
+/* COMPONENT: ui-feedback (empty-state, loader, toast, modal) */
+.empty-state { text-align: center; padding: var(--space-16) var(--space-4); }
+.empty-state__icon { font-size: 4rem; margin-bottom: var(--space-4); animation: float 3s ease-in-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.empty-state h3 { font-size: 1.3rem; margin-bottom: var(--space-2); }
+.empty-state p { color: var(--gray-500); margin-bottom: var(--space-6); }
+.loader { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; gap: var(--space-4); }
+.loader__ball { font-size: 3rem; animation: loaderBounce 0.6s ease-in-out infinite; }
+@keyframes loaderBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+.loader p { font-family: var(--font-display); color: var(--gray-500); }
+.toast-container { position: fixed; top: calc(var(--navbar-height) + 16px); right: 16px; z-index: 2000; display: flex; flex-direction: column; gap: var(--space-3); }
+.toast { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-4); background: var(--white); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); min-width: 280px; max-width: 380px; animation: toastIn 0.3s ease; }
+@keyframes toastIn { from { opacity: 0; transform: translateX(100px); } }
+.toast--success { border-left: 4px solid var(--success); }
+.toast--error { border-left: 4px solid var(--error); }
+.toast--warning { border-left: 4px solid var(--warning); }
+.toast__icon { font-size: 1.3rem; }
+.toast__content { flex: 1; }
+.toast__title { font-weight: 700; color: var(--gray-900); font-size: 0.9rem; }
+.toast__message { font-size: 0.85rem; color: var(--gray-600); }
+.toast__close { padding: var(--space-2); color: var(--gray-400); cursor: pointer; }
+.toast__close:hover { color: var(--gray-600); }
+.modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 3000; display: flex; align-items: center; justify-content: center; padding: var(--space-4); opacity: 0; visibility: hidden; transition: var(--transition); }
+.modal.active { opacity: 1; visibility: visible; }
+.modal__backdrop { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+.modal__content { position: relative; background: var(--white); border-radius: var(--radius-2xl); max-width: 450px; width: 100%; max-height: 90vh; overflow: auto; transform: scale(0.9); transition: var(--transition); }
+.modal.active .modal__content { transform: scale(1); }
