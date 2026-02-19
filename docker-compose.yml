@@ -1,0 +1,79 @@
+# =========================================
+# PickupPro Docker Compose
+# =========================================
+# Development environment with MongoDB
+# =========================================
+
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongo:
+    image: mongo:7
+    container_name: pickuppro-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: pickuppro
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - pickuppro-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # Node.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pickuppro-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongo:27017/pickuppro
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - JWT_EXPIRES_IN=7d
+      - CORS_ORIGINS=http://localhost:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - pickuppro-network
+    volumes:
+      # Mount source for development hot-reload
+      - ./src:/app/src:ro
+      - ./public:/app/public:ro
+
+  # Seed Database (one-time run)
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pickuppro-seed
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/pickuppro
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - pickuppro-network
+    command: ["node", "src/db/seed.js"]
+    profiles:
+      - seed
+
+networks:
+  pickuppro-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local
