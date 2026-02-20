@@ -317,7 +317,7 @@ npm run format:check
 
 ## 🎥 Demo Video
 
-[Watch the demo video](https://youtu.be/your-video-id)
+Demo video submitted via Google Form.
 
 ---
 
