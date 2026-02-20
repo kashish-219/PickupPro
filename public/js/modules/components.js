@@ -68,11 +68,11 @@ export function PlayerCard(u) {
       <h3 class="player-card__name">${escape(u.name)}</h3>
       <div class="player-card__rating"><span>⭐</span> ${(u.rating?.avgRating || 0).toFixed(1)} (${u.rating?.totalRatings || 0})</div>
       <div class="player-card__sports">${(u.sports || [])
-        .slice(0, 4)
-        .map(
-          (s) => `<div class="player-card__sport">${getSport(s).emoji}</div>`,
-        )
-        .join("")}</div>
+    .slice(0, 4)
+    .map(
+      (s) => `<div class="player-card__sport">${getSport(s).emoji}</div>`,
+    )
+    .join("")}</div>
     </a>`;
 }
 
@@ -87,19 +87,20 @@ export function SportSelector(type = "radio", selected = []) {
 
 export function setupSportSelector() {
   $$(".sport-item").forEach((label) => {
-    label.onclick = (e) => {
+    label.addEventListener("click", (e) => {
+      e.preventDefault();
       const input = label.querySelector("input");
-      const isRadio = input.type === "radio";
-      if (e.target !== input) {
-        if (isRadio) input.checked = true;
-        else input.checked = !input.checked;
-      }
-      if (isRadio) {
-        $$(".sport-item").forEach((l) => l.classList.remove("active"));
+      if (input.type === "radio") {
+        $$(".sport-item input[type='radio'][name='" + input.name + "']").forEach((r) => {
+          r.checked = false;
+          r.closest(".sport-item").classList.remove("active");
+        });
+        input.checked = true;
         label.classList.add("active");
       } else {
+        input.checked = !input.checked;
         label.classList.toggle("active", input.checked);
       }
-    };
+    });
   });
 }
