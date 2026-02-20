@@ -3,35 +3,42 @@
  * Shared constants and utility functions.
  */
 export const SPORTS = [
-  { name: 'Basketball', emoji: '🏀', color: '#FF6B35' },
-  { name: 'Soccer',     emoji: '⚽', color: '#00D26A' },
-  { name: 'Tennis',     emoji: '🎾', color: '#FFE135' },
-  { name: 'Volleyball', emoji: '🏐', color: '#A855F7' },
-  { name: 'Baseball',   emoji: '⚾', color: '#EF4444' },
-  { name: 'Cricket',    emoji: '🏏', color: '#06B6D4' },
-  { name: 'Badminton',  emoji: '🏸', color: '#3B82F6' },
-  { name: 'Running',    emoji: '🏃', color: '#F97316' },
-  { name: 'Other',      emoji: '🎯', color: '#8B5CF6' },
+  { name: "Basketball", emoji: "🏀", color: "#FF6B35" },
+  { name: "Soccer", emoji: "⚽", color: "#00D26A" },
+  { name: "Tennis", emoji: "🎾", color: "#FFE135" },
+  { name: "Volleyball", emoji: "🏐", color: "#A855F7" },
+  { name: "Baseball", emoji: "⚾", color: "#EF4444" },
+  { name: "Cricket", emoji: "🏏", color: "#06B6D4" },
+  { name: "Badminton", emoji: "🏸", color: "#3B82F6" },
+  { name: "Running", emoji: "🏃", color: "#F97316" },
+  { name: "Other", emoji: "🎯", color: "#8B5CF6" },
 ];
 
-export const $  = s => document.querySelector(s);
-export const $$ = s => document.querySelectorAll(s);
+export const $ = (s) => document.querySelector(s);
+export const $$ = (s) => document.querySelectorAll(s);
 
-export const getSport = name =>
-  SPORTS.find(s => s.name === name) || { name, emoji: '🎯', color: '#8B5CF6' };
+export const getSport = (name) =>
+  SPORTS.find((s) => s.name === name) || {
+    name,
+    emoji: "🎯",
+    color: "#8B5CF6",
+  };
 
-export const escape = s => {
-  if (!s) return '';
-  const d = document.createElement('div');
+export const escape = (s) => {
+  if (!s) return "";
+  const d = document.createElement("div");
   d.textContent = s;
   return d.innerHTML;
 };
 
-export const formatDate = d =>
-  new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+export const formatDate = (d) =>
+  new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
-export const formatTime = d =>
-  new Date(d).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+export const formatTime = (d) =>
+  new Date(d).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
 
 export const floatingBalls = `
   <div class="floating-balls">

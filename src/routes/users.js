@@ -111,7 +111,7 @@ router.get("/", optionalAuth, async (req, res, next) => {
     if (minRating) {
       const minRatingNum = parseFloat(minRating);
       enhancedUsers = enhancedUsers.filter(
-        (u) => u.rating.avgRating >= minRatingNum || u.rating.totalRatings === 0,
+        (u) => u.rating.avgRating >= minRatingNum || u.rating.totalRatings === 0
       );
     }
 
@@ -146,10 +146,9 @@ router.get("/:id", optionalAuth, async (req, res, next) => {
     }
 
     const db = getDb();
-    const user = await db.collection("users").findOne(
-      { _id: new ObjectId(id) },
-      { projection: { password: 0 } },
-    );
+    const user = await db
+      .collection("users")
+      .findOne({ _id: new ObjectId(id) }, { projection: { password: 0 } });
 
     if (!user) {
       throw new AppError("User not found", 404);
@@ -236,7 +235,11 @@ router.get("/:id", optionalAuth, async (req, res, next) => {
                   $map: {
                     input: "$game",
                     as: "g",
-                    in: { _id: "$$g._id", title: "$$g.title", sport: "$$g.sport" },
+                    in: {
+                      _id: "$$g._id",
+                      title: "$$g.title",
+                      sport: "$$g.sport",
+                    },
                   },
                 },
                 0,
@@ -327,7 +330,10 @@ router.put("/:id", authenticate, async (req, res, next) => {
       }
       const validSkillLevels = {};
       for (const [sport, level] of Object.entries(skillLevels)) {
-        if (VALID_SPORTS.includes(sport) && VALID_SKILL_LEVELS.includes(level)) {
+        if (
+          VALID_SPORTS.includes(sport) &&
+          VALID_SKILL_LEVELS.includes(level)
+        ) {
           validSkillLevels[sport] = level;
         }
       }
@@ -339,11 +345,13 @@ router.put("/:id", authenticate, async (req, res, next) => {
     }
 
     const db = getDb();
-    const result = await db.collection("users").findOneAndUpdate(
-      { _id: new ObjectId(id) },
-      { $set: updates },
-      { returnDocument: "after", projection: { password: 0 } },
-    );
+    const result = await db
+      .collection("users")
+      .findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: updates },
+        { returnDocument: "after", projection: { password: 0 } }
+      );
 
     if (!result) {
       throw new AppError("User not found", 404);

@@ -48,7 +48,7 @@ export async function authenticate(req, res, next) {
     }
 
     // Attach user to request (exclude password)
-    const { password: _, ...userWithoutPassword } = user;
+    const { password: _password, ...userWithoutPassword } = user;
     req.user = userWithoutPassword;
 
     next();
@@ -98,12 +98,12 @@ export async function optionalAuth(req, res, next) {
     });
 
     if (user) {
-      const { password: _, ...userWithoutPassword } = user;
+      const { password: _password, ...userWithoutPassword } = user;
       req.user = userWithoutPassword;
     }
 
     next();
-  } catch (_error) {
+  } catch (_err) {
     // Token invalid or expired, continue without user
     next();
   }

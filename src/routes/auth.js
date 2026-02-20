@@ -93,7 +93,7 @@ router.post("/register", async (req, res, next) => {
     const token = generateToken(newUser._id);
 
     // Return user without password
-    const { password: _, ...userWithoutPassword } = newUser;
+    const { password: _password, ...userWithoutPassword } = newUser;
 
     res.status(201).json({
       success: true,
@@ -144,7 +144,7 @@ router.post("/login", async (req, res, next) => {
     const token = generateToken(user._id);
 
     // Return user without password
-    const { password: _, ...userWithoutPassword } = user;
+    const { password: _password, ...userWithoutPassword } = user;
 
     res.json({
       success: true,

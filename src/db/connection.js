@@ -97,7 +97,7 @@ async function createIndexes(database) {
     await ratingsCollection.createIndex({ toUserId: 1 });
     await ratingsCollection.createIndex(
       { fromUserId: 1, toUserId: 1, gameId: 1 },
-      { unique: true },
+      { unique: true }
     );
 
     console.log("✅ Database indexes created successfully");

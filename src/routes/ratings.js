@@ -67,14 +67,23 @@ router.post("/", authenticate, async (req, res, next) => {
     }
 
     // Check if both users participated in the game
-    const allParticipants = [game.hostId.toString(), ...game.players.map((p) => p.toString())];
+    const allParticipants = [
+      game.hostId.toString(),
+      ...game.players.map((p) => p.toString()),
+    ];
 
     if (!allParticipants.includes(fromUserId.toString())) {
-      throw new AppError("You must have participated in this game to rate", 403);
+      throw new AppError(
+        "You must have participated in this game to rate",
+        403
+      );
     }
 
     if (!allParticipants.includes(toUserId)) {
-      throw new AppError("The user you are rating must have participated in this game", 400);
+      throw new AppError(
+        "The user you are rating must have participated in this game",
+        400
+      );
     }
 
     // Check if already rated this person for this game
@@ -85,7 +94,10 @@ router.post("/", authenticate, async (req, res, next) => {
     });
 
     if (existingRating) {
-      throw new AppError("You have already rated this player for this game", 400);
+      throw new AppError(
+        "You have already rated this player for this game",
+        400
+      );
     }
 
     // Create rating
@@ -235,10 +247,9 @@ router.get("/pending", authenticate, async (req, res, next) => {
 
     for (const game of games) {
       // Get all participants except self
-      const allParticipants = [
-        game.hostId,
-        ...game.players,
-      ].filter((p) => p.toString() !== userId.toString());
+      const allParticipants = [game.hostId, ...game.players].filter(
+        (p) => p.toString() !== userId.toString()
+      );
 
       // Get existing ratings from this user for this game
       const existingRatings = await db
@@ -253,7 +264,7 @@ router.get("/pending", authenticate, async (req, res, next) => {
 
       // Filter to unrated participants
       const unratedParticipants = allParticipants.filter(
-        (p) => !ratedUserIds.includes(p.toString()),
+        (p) => !ratedUserIds.includes(p.toString())
       );
 
       if (unratedParticipants.length > 0) {
@@ -262,7 +273,7 @@ router.get("/pending", authenticate, async (req, res, next) => {
           .collection("users")
           .find(
             { _id: { $in: unratedParticipants } },
-            { projection: { password: 0 } },
+            { projection: { password: 0 } }
           )
           .toArray();
 

@@ -182,9 +182,6 @@ const OTHER_LOCATIONS = [
   },
 ];
 
-// All locations combined (70% Boston, 30% other)
-const ALL_LOCATIONS = [...BOSTON_LOCATIONS, ...OTHER_LOCATIONS];
-
 const FIRST_NAMES = [
   "Alex",
   "Jordan",
@@ -408,7 +405,7 @@ async function generateUsers(count) {
       if (!userSports.includes(sport)) {
         userSports.push(sport);
         skillLevels[sport] = randomElement(
-          SKILL_LEVELS.filter((s) => s !== "All Levels"),
+          SKILL_LEVELS.filter((s) => s !== "All Levels")
         );
       }
     }
@@ -473,7 +470,9 @@ function generateGames(users, count) {
       status === "cancelled"
         ? randomInt(0, minPlayers - 1)
         : randomInt(minPlayers, maxPlayers);
-    const availableUsers = users.filter((u) => u._id.toString() !== host._id.toString());
+    const availableUsers = users.filter(
+      (u) => u._id.toString() !== host._id.toString()
+    );
     const players = [];
     const waitlist = [];
 
@@ -517,7 +516,9 @@ function generateGames(users, count) {
       waitlist: waitlist,
       status: status,
       skillLevel: randomElement(SKILL_LEVELS),
-      createdAt: new Date(gameDate.getTime() - randomInt(1, 30) * 24 * 60 * 60 * 1000),
+      createdAt: new Date(
+        gameDate.getTime() - randomInt(1, 30) * 24 * 60 * 60 * 1000
+      ),
       updatedAt: new Date(),
     });
   }
@@ -535,11 +536,14 @@ function generateRatings(users, games) {
     // Each player rates some other players
     for (const fromUserId of allPlayers) {
       const otherPlayers = allPlayers.filter(
-        (p) => p.toString() !== fromUserId.toString(),
+        (p) => p.toString() !== fromUserId.toString()
       );
 
       // Rate 50-100% of other players
-      const numToRate = Math.max(1, Math.floor(otherPlayers.length * (0.5 + Math.random() * 0.5)));
+      const numToRate = Math.max(
+        1,
+        Math.floor(otherPlayers.length * (0.5 + Math.random() * 0.5))
+      );
 
       for (let i = 0; i < numToRate && i < otherPlayers.length; i++) {
         const toUserId = otherPlayers[i];
@@ -550,7 +554,7 @@ function generateRatings(users, games) {
             (r) =>
               r.fromUserId.toString() === fromUserId.toString() &&
               r.toUserId.toString() === toUserId.toString() &&
-              r.gameId.toString() === game._id.toString(),
+              r.gameId.toString() === game._id.toString()
           )
         ) {
           continue;
@@ -566,7 +570,9 @@ function generateRatings(users, games) {
           toUserId: toUserId,
           score: score,
           comment: Math.random() < 0.6 ? randomElement(RATING_COMMENTS) : "",
-          createdAt: new Date(game.date.getTime() + randomInt(1, 48) * 60 * 60 * 1000),
+          createdAt: new Date(
+            game.date.getTime() + randomInt(1, 48) * 60 * 60 * 1000
+          ),
         });
       }
     }

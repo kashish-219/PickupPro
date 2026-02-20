@@ -1,17 +1,19 @@
 /**
  * PAGE: auth  (/login  /register)
  */
-import { Auth } from '../modules/api.js';
-import { $ } from '../modules/utils.js';
-import { route, render, navigate } from '../modules/router.js';
-import { currentUser, setCurrentUser, updateAuthUI } from '../modules/auth.js';
-import { toast } from '../modules/toast.js';
-import { SportSelector, setupSportSelector } from '../modules/components.js';
+import { Auth } from "../modules/api.js";
+import { $ } from "../modules/utils.js";
+import { route, render, navigate } from "../modules/router.js";
+import { currentUser, setCurrentUser, updateAuthUI } from "../modules/auth.js";
+import { toast } from "../modules/toast.js";
+import { SportSelector, setupSportSelector } from "../modules/components.js";
 
 export function registerAuthRoutes() {
-
-  route('/login', async () => {
-    if (currentUser) { navigate('/'); return; }
+  route("/login", async () => {
+    if (currentUser) {
+      navigate("/");
+      return;
+    }
     render(`
       <section class="section"><div class="container" style="max-width:420px">
         <div class="card card--static">
@@ -33,18 +35,36 @@ export function registerAuthRoutes() {
           </div>
         </div>
       </div></section>`);
-    $('#loginForm').onsubmit=async e=>{
+    $("#loginForm").onsubmit = async (e) => {
       e.preventDefault();
-      const btn=e.target.querySelector('button[type="submit"]');const fd=new FormData(e.target);
-      btn.disabled=true;btn.classList.add('btn--loading');
-      try{const r=await Auth.login({email:fd.get('email'),password:fd.get('password')});localStorage.setItem('token',r.data.token);setCurrentUser(r.data.user);updateAuthUI();toast('success','Welcome back! 🎉');navigate('/');}
-      catch(err){toast('error',err.message);}
-      finally{btn.disabled=false;btn.classList.remove('btn--loading');}
+      const btn = e.target.querySelector('button[type="submit"]');
+      const fd = new FormData(e.target);
+      btn.disabled = true;
+      btn.classList.add("btn--loading");
+      try {
+        const r = await Auth.login({
+          email: fd.get("email"),
+          password: fd.get("password"),
+        });
+        localStorage.setItem("token", r.data.token);
+        setCurrentUser(r.data.user);
+        updateAuthUI();
+        toast("success", "Welcome back! 🎉");
+        navigate("/");
+      } catch (err) {
+        toast("error", err.message);
+      } finally {
+        btn.disabled = false;
+        btn.classList.remove("btn--loading");
+      }
     };
   });
 
-  route('/register', async () => {
-    if (currentUser) { navigate('/'); return; }
+  route("/register", async () => {
+    if (currentUser) {
+      navigate("/");
+      return;
+    }
     render(`
       <section class="section"><div class="container" style="max-width:480px">
         <div class="card card--static">
@@ -58,7 +78,7 @@ export function registerAuthRoutes() {
               <div class="form-group"><label class="form-label">👤 Name</label><input type="text" name="name" class="form-input" placeholder="Your name" required minlength="2"></div>
               <div class="form-group"><label class="form-label">📧 Email</label><input type="email" name="email" class="form-input" placeholder="you@example.com" required></div>
               <div class="form-group"><label class="form-label">🔐 Password</label><input type="password" name="password" class="form-input" placeholder="Min 6 chars" required minlength="6"></div>
-              <div class="form-group"><label class="form-label">🏆 Favorite Sports</label>${SportSelector('checkbox')}</div>
+              <div class="form-group"><label class="form-label">🏆 Favorite Sports</label>${SportSelector("checkbox")}</div>
               <button type="submit" class="btn btn--primary btn--full btn--lg">✨ Create Account</button>
             </form>
             <div style="text-align:center;margin-top:var(--space-6);padding-top:var(--space-6);border-top:2px dashed var(--gray-200)">
@@ -68,13 +88,30 @@ export function registerAuthRoutes() {
         </div>
       </div></section>`);
     setupSportSelector();
-    $('#registerForm').onsubmit=async e=>{
+    $("#registerForm").onsubmit = async (e) => {
       e.preventDefault();
-      const btn=e.target.querySelector('button[type="submit"]');const fd=new FormData(e.target);
-      btn.disabled=true;btn.classList.add('btn--loading');
-      try{const r=await Auth.register({name:fd.get('name'),email:fd.get('email'),password:fd.get('password'),sports:fd.getAll('sports')});localStorage.setItem('token',r.data.token);setCurrentUser(r.data.user);updateAuthUI();toast('success','Welcome! 🎉');navigate('/');}
-      catch(err){toast('error',err.message);}
-      finally{btn.disabled=false;btn.classList.remove('btn--loading');}
+      const btn = e.target.querySelector('button[type="submit"]');
+      const fd = new FormData(e.target);
+      btn.disabled = true;
+      btn.classList.add("btn--loading");
+      try {
+        const r = await Auth.register({
+          name: fd.get("name"),
+          email: fd.get("email"),
+          password: fd.get("password"),
+          sports: fd.getAll("sports"),
+        });
+        localStorage.setItem("token", r.data.token);
+        setCurrentUser(r.data.user);
+        updateAuthUI();
+        toast("success", "Welcome! 🎉");
+        navigate("/");
+      } catch (err) {
+        toast("error", err.message);
+      } finally {
+        btn.disabled = false;
+        btn.classList.remove("btn--loading");
+      }
     };
   });
 }

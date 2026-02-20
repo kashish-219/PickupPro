@@ -1,55 +1,68 @@
+import globals from "globals";
 import js from "@eslint/js";
+import eslintConfigPrettier from "eslint-config-prettier";
+import prettier from "eslint-plugin-prettier";
 
 export default [
-  js.configs.recommended,
   {
+    files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
+
     languageOptions: {
-      ecmaVersion: 2024,
+      ecmaVersion: "latest",
       sourceType: "module",
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+
       globals: {
-        // Node.js globals
-        console: "readonly",
-        process: "readonly",
-        Buffer: "readonly",
-        __dirname: "readonly",
-        __filename: "readonly",
-        setTimeout: "readonly",
-        clearTimeout: "readonly",
-        setInterval: "readonly",
-        clearInterval: "readonly",
-        // Browser globals for frontend
-        window: "readonly",
-        document: "readonly",
-        localStorage: "readonly",
-        fetch: "readonly",
-        alert: "readonly",
-        confirm: "readonly",
-        FormData: "readonly",
-        URLSearchParams: "readonly",
-        history: "readonly",
-        location: "readonly",
-        Event: "readonly",
-        CustomEvent: "readonly",
-        HTMLElement: "readonly",
-        NodeList: "readonly",
-        Headers: "readonly",
-        Request: "readonly",
-        Response: "readonly",
+        ...globals.browser,
+        ...globals.node,
+        ...globals.es2025,
       },
     },
+    plugins: {
+      prettier: prettier,
+    },
+
     rules: {
-      "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-      "no-console": "off",
+      // ESLint recommended rules
+      ...js.configs.recommended.rules,
+
+      indent: [
+        "error",
+        2,
+        {
+          SwitchCase: 1,
+        },
+      ],
+
+      "linebreak-style": ["error", "unix"],
+      quotes: ["error", "double"],
       semi: ["error", "always"],
-      quotes: ["error", "double", { avoidEscape: true }],
-      indent: ["error", 2],
-      "comma-dangle": ["error", "always-multiline"],
-      "no-multiple-empty-lines": ["error", { max: 2 }],
-      eqeqeq: ["error", "always"],
-      curly: ["error", "all"],
+      "no-console": 0,
+
+      "no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+        },
+      ],
+
+      // Prettier integration - this runs Prettier through ESLint
+      "prettier/prettier": [
+        "error",
+        {
+          endOfLine: "lf",
+          trailingComma: "es5",
+          singleQuote: false,
+        },
+      ],
     },
   },
-  {
-    ignores: ["node_modules/", "dist/", "*.min.js"],
-  },
+  eslintConfigPrettier,
 ];
