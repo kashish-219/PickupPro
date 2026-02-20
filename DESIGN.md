@@ -1,6 +1,6 @@
 # PickupPro — Design Document
 
-> **Course:** CS5610 Web Development · Northeastern University · Spring 2025
+> **Course:** CS5610 Web Development · Northeastern University · Spring 2026
 > **Authors:** Kashish Rahulbhai Khatri & Abhimanyu Dudeja
 
 ---
