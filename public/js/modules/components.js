@@ -1,6 +1,7 @@
 /**
  * MODULE: components
  * Reusable UI component functions.
+ * Created by: Kashish Rahulbhai Khatri & Abhimanyu Dudeja
  */
 import {
   SPORTS,
@@ -18,11 +19,24 @@ export function GameCard(g) {
   const full = g.playerCount >= g.maxPlayers;
   const offset = 113 - (113 * pct) / 100;
   const statusCls =
-    g.status === "completed" ? "completed" : g.status === "cancelled" ? "cancelled" : full ? "full" : "open";
-  const statusTxt = g.status === "completed" ? "Done" : g.status === "cancelled" ? "Cancelled" : full ? "Full" : "Open";
+    g.status === "completed"
+      ? "completed"
+      : g.status === "cancelled"
+        ? "cancelled"
+        : full
+          ? "full"
+          : "open";
+  const statusTxt =
+    g.status === "completed"
+      ? "Done"
+      : g.status === "cancelled"
+        ? "Cancelled"
+        : full
+          ? "Full"
+          : "Open";
   const fillCls = pct >= 100 ? "full" : pct >= 75 ? "warning" : "";
   return `
-    <div class="game-card game-card--${cls}" onclick="navigate('/games/${g._id}')">
+    <a href="/games/${g._id}" data-link class="game-card game-card--${cls}" style="text-decoration:none;color:inherit">
       <div class="game-card__header">
         <div class="game-card__badge"><span>${s.emoji}</span> ${s.name}</div>
         <span class="game-card__status game-card__status--${statusCls}">${statusTxt}</span>
@@ -42,24 +56,24 @@ export function GameCard(g) {
         ${g.host ? `<div class="game-card__host"><div class="game-card__host-avatar">👤</div><div><div class="game-card__host-name">${escape(g.host.name)}</div><div class="game-card__host-rating">⭐ ${(g.host.rating?.avgRating || 0).toFixed(1)}</div></div></div>` : ""}
       </div>
       <div class="game-card__footer">
-        <button class="game-card__cta game-card__cta--${full || g.status === 'cancelled' || g.status === 'completed' ? "view" : "join"}" onclick="event.stopPropagation();navigate('/games/${g._id}')">${full || g.status === 'cancelled' || g.status === 'completed' ? "👁️ View" : "🎮 Join"}</button>
+        <button class="game-card__cta game-card__cta--${full || g.status === "cancelled" || g.status === "completed" ? "view" : "join"}" onclick="event.stopPropagation();navigate('/games/${g._id}')">${full || g.status === "cancelled" || g.status === "completed" ? "👁️ View" : "Join"}</button>
       </div>
-    </div>`;
+    </a>`;
 }
 
 export function PlayerCard(u) {
   return `
-    <div class="player-card" onclick="navigate('/users/${u._id}')">
+    <a href="/users/${u._id}" data-link class="player-card" style="text-decoration:none;color:inherit">
       <div class="player-card__avatar">👤</div>
       <h3 class="player-card__name">${escape(u.name)}</h3>
       <div class="player-card__rating"><span>⭐</span> ${(u.rating?.avgRating || 0).toFixed(1)} (${u.rating?.totalRatings || 0})</div>
       <div class="player-card__sports">${(u.sports || [])
         .slice(0, 4)
         .map(
-          (s) => `<div class="player-card__sport">${getSport(s).emoji}</div>`
+          (s) => `<div class="player-card__sport">${getSport(s).emoji}</div>`,
         )
         .join("")}</div>
-    </div>`;
+    </a>`;
 }
 
 export function SportSelector(type = "radio", selected = []) {

@@ -75,14 +75,14 @@ router.post("/", authenticate, async (req, res, next) => {
     if (!allParticipants.includes(fromUserId.toString())) {
       throw new AppError(
         "You must have participated in this game to rate",
-        403
+        403,
       );
     }
 
     if (!allParticipants.includes(toUserId)) {
       throw new AppError(
         "The user you are rating must have participated in this game",
-        400
+        400,
       );
     }
 
@@ -96,7 +96,7 @@ router.post("/", authenticate, async (req, res, next) => {
     if (existingRating) {
       throw new AppError(
         "You have already rated this player for this game",
-        400
+        400,
       );
     }
 
@@ -248,7 +248,7 @@ router.get("/pending", authenticate, async (req, res, next) => {
     for (const game of games) {
       // Get all participants except self
       const allParticipants = [game.hostId, ...game.players].filter(
-        (p) => p.toString() !== userId.toString()
+        (p) => p.toString() !== userId.toString(),
       );
 
       // Get existing ratings from this user for this game
@@ -264,7 +264,7 @@ router.get("/pending", authenticate, async (req, res, next) => {
 
       // Filter to unrated participants
       const unratedParticipants = allParticipants.filter(
-        (p) => !ratedUserIds.includes(p.toString())
+        (p) => !ratedUserIds.includes(p.toString()),
       );
 
       if (unratedParticipants.length > 0) {
@@ -273,7 +273,7 @@ router.get("/pending", authenticate, async (req, res, next) => {
           .collection("users")
           .find(
             { _id: { $in: unratedParticipants } },
-            { projection: { password: 0 } }
+            { projection: { password: 0 } },
           )
           .toArray();
 

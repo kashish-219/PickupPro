@@ -1,66 +1,323 @@
 /* COMPONENT: game-card */
-.card { background: var(--white); border-radius: var(--radius-2xl); box-shadow: var(--shadow-md); overflow: hidden; transition: var(--bounce); }
-.card:hover { transform: translateY(-8px); box-shadow: var(--shadow-xl); }
-.card--static:hover { transform: none; box-shadow: var(--shadow-md); }
-.card__header { position: relative; padding: var(--space-5); color: white; overflow: hidden; }
-.card__header--basketball { background: var(--basketball-gradient); }
-.card__header--soccer { background: var(--soccer-gradient); }
-.card__header--tennis { background: var(--tennis-gradient); color: var(--gray-800); }
-.card__header--volleyball { background: var(--volleyball-gradient); }
-.card__header--baseball { background: var(--baseball-gradient); }
-.card__header--cricket { background: var(--cricket-gradient); }
-.card__header--badminton { background: var(--badminton-gradient); }
-.card__header--running { background: var(--running-gradient); }
-.card__header--other { background: var(--other-gradient); }
-.card__header--primary { background: var(--primary-gradient); }
-.card__mascot { position: absolute; right: -10px; bottom: -20px; font-size: 100px; opacity: 0.3; transition: var(--bounce); pointer-events: none; }
-.card:hover .card__mascot { transform: scale(1.1) rotate(-5deg); }
-.card__body { padding: var(--space-6); }
-.game-card { background: var(--white); border-radius: var(--radius-2xl); overflow: hidden; box-shadow: var(--shadow-md); transition: var(--bounce); cursor: pointer; }
-.game-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: var(--shadow-xl); }
-.game-card__header { position: relative; height: 130px; padding: var(--space-4); display: flex; justify-content: space-between; align-items: flex-start; overflow: hidden; }
-.game-card--basketball .game-card__header { background: var(--basketball-gradient); }
-.game-card--soccer .game-card__header { background: var(--soccer-gradient); }
-.game-card--tennis .game-card__header { background: var(--tennis-gradient); }
-.game-card--volleyball .game-card__header { background: var(--volleyball-gradient); }
-.game-card--baseball .game-card__header { background: var(--baseball-gradient); }
-.game-card--cricket .game-card__header { background: var(--cricket-gradient); }
-.game-card--badminton .game-card__header { background: var(--badminton-gradient); }
-.game-card--running .game-card__header { background: var(--running-gradient); }
-.game-card--other .game-card__header { background: var(--other-gradient); }
-.game-card__badge { display: inline-flex; align-items: center; gap: var(--space-2); background: rgba(255,255,255,0.95); padding: var(--space-2) var(--space-3); border-radius: var(--radius-full); font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; box-shadow: var(--shadow-sm); color: var(--gray-800); }
-.game-card__status { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; background: rgba(255,255,255,0.95); }
-.game-card__status--open { color: var(--success); }
-.game-card__status--full { color: var(--warning); }
-.game-card__status--completed { color: var(--gray-500); }
-.game-card__status--cancelled { color: var(--danger, #EF4444); }
-.game-card__mascot { position: absolute; right: -10px; bottom: -25px; font-size: 110px; opacity: 0.35; transition: var(--bounce); pointer-events: none; }
-.game-card:hover .game-card__mascot { transform: scale(1.1) rotate(-5deg); }
-.game-card__body { padding: var(--space-5); }
-.game-card__title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--gray-900); margin-bottom: var(--space-4); }
-.game-card__info { display: flex; flex-direction: column; gap: var(--space-3); }
-.game-card__info-row { display: flex; align-items: center; gap: var(--space-3); font-size: 0.9rem; color: var(--gray-600); }
-.game-card__info-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--gray-100); border-radius: var(--radius-md); font-size: 1rem; flex-shrink: 0; }
-.game-card__players { display: flex; align-items: center; gap: var(--space-4); margin-top: var(--space-4); padding: var(--space-3); background: var(--gray-50); border-radius: var(--radius-lg); }
-.game-card__avatars { display: flex; }
-.game-card__avatar { width: 28px; height: 28px; border-radius: var(--radius-full); border: 2px solid var(--white); margin-left: -8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; background: var(--primary-gradient); }
-.game-card__avatar:first-child { margin-left: 0; }
-.game-card__avatar--more { background: var(--gray-200); font-size: 0.65rem; font-weight: 700; color: var(--gray-600); }
-.game-card__players-info { flex: 1; }
-.game-card__players-count { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--gray-900); }
-.game-card__players-label { font-size: 0.7rem; color: var(--gray-500); }
-.game-card__progress { width: 44px; height: 44px; }
-.game-card__progress-bg { fill: none; stroke: var(--gray-200); stroke-width: 4; }
-.game-card__progress-fill { fill: none; stroke: var(--success); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 113; transition: stroke-dashoffset var(--transition); }
-.game-card__progress-fill--warning { stroke: var(--warning); }
-.game-card__progress-fill--full { stroke: var(--error); }
-.game-card__host { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-4); padding-top: var(--space-4); border-top: 2px dashed var(--gray-200); }
-.game-card__host-avatar { width: 36px; height: 36px; border-radius: var(--radius-full); background: var(--gray-200); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-.game-card__host-name { font-weight: 600; font-size: 0.9rem; }
-.game-card__host-rating { font-size: 0.8rem; color: var(--gray-500); }
-.game-card__footer { padding: 0 var(--space-5) var(--space-5); }
-.game-card__cta { width: 100%; padding: var(--space-4); border-radius: var(--radius-xl); font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: var(--space-2); transition: var(--transition); border: none; cursor: pointer; }
-.game-card__cta--join { background: var(--primary-gradient); color: var(--white); box-shadow: 0 4px 16px rgba(99,102,241,0.3); }
-.game-card__cta--join:hover { box-shadow: 0 8px 24px rgba(99,102,241,0.4); transform: translateY(-2px); }
-.game-card__cta--view { background: var(--gray-100); color: var(--gray-700); }
-.game-card__cta--view:hover { background: var(--gray-200); }
+.card {
+  background: var(--white);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: var(--bounce);
+}
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+}
+.card--static:hover {
+  transform: none;
+  box-shadow: var(--shadow-md);
+}
+.card__header {
+  position: relative;
+  padding: var(--space-5);
+  color: white;
+  overflow: hidden;
+}
+.card__header--basketball {
+  background: var(--basketball-gradient);
+}
+.card__header--soccer {
+  background: var(--soccer-gradient);
+}
+.card__header--tennis {
+  background: var(--tennis-gradient);
+  color: var(--gray-800);
+}
+.card__header--volleyball {
+  background: var(--volleyball-gradient);
+}
+.card__header--baseball {
+  background: var(--baseball-gradient);
+}
+.card__header--cricket {
+  background: var(--cricket-gradient);
+}
+.card__header--badminton {
+  background: var(--badminton-gradient);
+}
+.card__header--running {
+  background: var(--running-gradient);
+}
+.card__header--other {
+  background: var(--other-gradient);
+}
+.card__header--primary {
+  background: var(--primary-gradient);
+}
+.card__mascot {
+  position: absolute;
+  right: -10px;
+  bottom: -20px;
+  font-size: 100px;
+  opacity: 0.3;
+  transition: var(--bounce);
+  pointer-events: none;
+}
+.card:hover .card__mascot {
+  transform: scale(1.1) rotate(-5deg);
+}
+.card__body {
+  padding: var(--space-6);
+}
+.game-card {
+  background: var(--white);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: var(--bounce);
+  cursor: pointer;
+}
+.game-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-xl);
+}
+.game-card__header {
+  position: relative;
+  height: 130px;
+  padding: var(--space-4);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  overflow: hidden;
+}
+.game-card--basketball .game-card__header {
+  background: var(--basketball-gradient);
+}
+.game-card--soccer .game-card__header {
+  background: var(--soccer-gradient);
+}
+.game-card--tennis .game-card__header {
+  background: var(--tennis-gradient);
+}
+.game-card--volleyball .game-card__header {
+  background: var(--volleyball-gradient);
+}
+.game-card--baseball .game-card__header {
+  background: var(--baseball-gradient);
+}
+.game-card--cricket .game-card__header {
+  background: var(--cricket-gradient);
+}
+.game-card--badminton .game-card__header {
+  background: var(--badminton-gradient);
+}
+.game-card--running .game-card__header {
+  background: var(--running-gradient);
+}
+.game-card--other .game-card__header {
+  background: var(--other-gradient);
+}
+.game-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: rgba(255, 255, 255, 0.95);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  color: var(--gray-800);
+}
+.game-card__status {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.95);
+}
+.game-card__status--open {
+  color: var(--success);
+}
+.game-card__status--full {
+  color: var(--warning);
+}
+.game-card__status--completed {
+  color: var(--gray-500);
+}
+.game-card__status--cancelled {
+  color: var(--danger, #ef4444);
+}
+.game-card__mascot {
+  position: absolute;
+  right: -10px;
+  bottom: -25px;
+  font-size: 110px;
+  opacity: 0.35;
+  transition: var(--bounce);
+  pointer-events: none;
+}
+.game-card:hover .game-card__mascot {
+  transform: scale(1.1) rotate(-5deg);
+}
+.game-card__body {
+  padding: var(--space-5);
+}
+.game-card__title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: var(--space-4);
+}
+.game-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.game-card__info-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 0.9rem;
+  color: var(--gray-600);
+}
+.game-card__info-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-100);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.game-card__players {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+  background: var(--gray-50);
+  border-radius: var(--radius-lg);
+}
+.game-card__avatars {
+  display: flex;
+}
+.game-card__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--white);
+  margin-left: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  background: var(--primary-gradient);
+}
+.game-card__avatar:first-child {
+  margin-left: 0;
+}
+.game-card__avatar--more {
+  background: var(--gray-200);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--gray-600);
+}
+.game-card__players-info {
+  flex: 1;
+}
+.game-card__players-count {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+.game-card__players-label {
+  font-size: 0.7rem;
+  color: var(--gray-500);
+}
+.game-card__progress {
+  width: 44px;
+  height: 44px;
+}
+.game-card__progress-bg {
+  fill: none;
+  stroke: var(--gray-200);
+  stroke-width: 4;
+}
+.game-card__progress-fill {
+  fill: none;
+  stroke: var(--success);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 113;
+  transition: stroke-dashoffset var(--transition);
+}
+.game-card__progress-fill--warning {
+  stroke: var(--warning);
+}
+.game-card__progress-fill--full {
+  stroke: var(--error);
+}
+.game-card__host {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 2px dashed var(--gray-200);
+}
+.game-card__host-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+.game-card__host-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.game-card__host-rating {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+}
+.game-card__footer {
+  padding: 0 var(--space-5) var(--space-5);
+}
+.game-card__cta {
+  width: 100%;
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: var(--transition);
+  border: none;
+  cursor: pointer;
+}
+.game-card__cta--join {
+  background: var(--primary-gradient);
+  color: var(--white);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+}
+.game-card__cta--join:hover {
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+}
+.game-card__cta--view {
+  background: var(--gray-100);
+  color: var(--gray-700);
+}
+.game-card__cta--view:hover {
+  background: var(--gray-200);
+}

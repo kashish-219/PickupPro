@@ -405,7 +405,7 @@ async function generateUsers(count) {
       if (!userSports.includes(sport)) {
         userSports.push(sport);
         skillLevels[sport] = randomElement(
-          SKILL_LEVELS.filter((s) => s !== "All Levels")
+          SKILL_LEVELS.filter((s) => s !== "All Levels"),
         );
       }
     }
@@ -471,7 +471,7 @@ function generateGames(users, count) {
         ? randomInt(0, minPlayers - 1)
         : randomInt(minPlayers, maxPlayers);
     const availableUsers = users.filter(
-      (u) => u._id.toString() !== host._id.toString()
+      (u) => u._id.toString() !== host._id.toString(),
     );
     const players = [];
     const waitlist = [];
@@ -517,7 +517,7 @@ function generateGames(users, count) {
       status: status,
       skillLevel: randomElement(SKILL_LEVELS),
       createdAt: new Date(
-        gameDate.getTime() - randomInt(1, 30) * 24 * 60 * 60 * 1000
+        gameDate.getTime() - randomInt(1, 30) * 24 * 60 * 60 * 1000,
       ),
       updatedAt: new Date(),
     });
@@ -536,13 +536,13 @@ function generateRatings(users, games) {
     // Each player rates some other players
     for (const fromUserId of allPlayers) {
       const otherPlayers = allPlayers.filter(
-        (p) => p.toString() !== fromUserId.toString()
+        (p) => p.toString() !== fromUserId.toString(),
       );
 
       // Rate 50-100% of other players
       const numToRate = Math.max(
         1,
-        Math.floor(otherPlayers.length * (0.5 + Math.random() * 0.5))
+        Math.floor(otherPlayers.length * (0.5 + Math.random() * 0.5)),
       );
 
       for (let i = 0; i < numToRate && i < otherPlayers.length; i++) {
@@ -554,7 +554,7 @@ function generateRatings(users, games) {
             (r) =>
               r.fromUserId.toString() === fromUserId.toString() &&
               r.toUserId.toString() === toUserId.toString() &&
-              r.gameId.toString() === game._id.toString()
+              r.gameId.toString() === game._id.toString(),
           )
         ) {
           continue;
@@ -571,7 +571,7 @@ function generateRatings(users, games) {
           score: score,
           comment: Math.random() < 0.6 ? randomElement(RATING_COMMENTS) : "",
           createdAt: new Date(
-            game.date.getTime() + randomInt(1, 48) * 60 * 60 * 1000
+            game.date.getTime() + randomInt(1, 48) * 60 * 60 * 1000,
           ),
         });
       }
@@ -589,7 +589,7 @@ async function seed() {
   const uri = process.env.MONGODB_URI;
 
   if (!uri) {
-    console.error("❌ MONGODB_URI environment variable is not set");
+    console.error("MONGODB_URI environment variable is not set");
     console.log("Please create a .env file with MONGODB_URI");
     process.exit(1);
   }
@@ -598,41 +598,41 @@ async function seed() {
 
   try {
     await client.connect();
-    console.log("✅ Connected to MongoDB");
+    console.log("Connected to MongoDB");
 
     const dbName = new URL(uri).pathname.slice(1) || "pickuppro";
     const db = client.db(dbName);
 
     // Clear existing data
-    console.log("🗑️  Clearing existing data...");
+    console.log("Clearing existing data...");
     await db.collection("users").deleteMany({});
     await db.collection("games").deleteMany({});
     await db.collection("ratings").deleteMany({});
 
     // Generate data
-    console.log("👥 Generating users...");
+    console.log("Generating users...");
     const users = await generateUsers(100);
 
-    console.log("🎮 Generating 1000+ games...");
+    console.log("Generating 1000+ games...");
     const games = generateGames(users, 1100);
 
-    console.log("⭐ Generating ratings...");
+    console.log("Generating ratings...");
     const ratings = generateRatings(users, games);
 
     // Insert data
-    console.log("📥 Inserting users...");
+    console.log("Inserting users...");
     await db.collection("users").insertMany(users);
 
-    console.log("📥 Inserting games...");
+    console.log("Inserting games...");
     await db.collection("games").insertMany(games);
 
-    console.log("📥 Inserting ratings...");
+    console.log("Inserting ratings...");
     if (ratings.length > 0) {
       await db.collection("ratings").insertMany(ratings);
     }
 
     // Create demo user
-    console.log("👤 Creating demo user...");
+    console.log("Creating demo user...");
     const demoPassword = await bcrypt.hash("demo123", 10);
     await db.collection("users").insertOne({
       _id: new ObjectId(),
@@ -652,22 +652,22 @@ async function seed() {
     });
 
     // Summary
-    console.log("\n✅ Seed completed successfully!");
+    console.log("\nSeed completed successfully!");
     console.log("=====================================");
-    console.log(`👥 Users created: ${users.length + 1}`);
-    console.log(`🎮 Games created: ${games.length}`);
-    console.log(`⭐ Ratings created: ${ratings.length}`);
+    console.log(`Users created: ${users.length + 1}`);
+    console.log(`Games created: ${games.length}`);
+    console.log(`Ratings created: ${ratings.length}`);
     console.log("=====================================");
-    console.log("\n📧 Demo account:");
+    console.log("\nDemo account:");
     console.log("   Email: demo@pickuppro.com");
     console.log("   Password: demo123");
     console.log("=====================================\n");
   } catch (error) {
-    console.error("❌ Seed failed:", error);
+    console.error("Seed failed:", error);
     process.exit(1);
   } finally {
     await client.close();
-    console.log("🔌 Database connection closed");
+    console.log("Database connection closed");
   }
 }
 

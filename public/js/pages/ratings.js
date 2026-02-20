@@ -1,5 +1,6 @@
 /**
  * PAGE: ratings  (/ratings/pending)
+ * Created by: Abhimanyu Dudeja
  */
 import { Ratings } from "../modules/api.js";
 import { getSport, escape, formatDate, $$ } from "../modules/utils.js";
@@ -37,11 +38,11 @@ export function registerRatingsRoute() {
                 </div>
                 <textarea class="form-textarea comment" placeholder="Comment (optional)" style="min-height:60px;margin-bottom:var(--space-3)"></textarea>
                 <button class="btn btn--primary submit-rating">Submit ⭐</button>
-              </div>`
+              </div>`,
               )
               .join("")}
             </div>
-          </div>`
+          </div>`,
                 )
                 .join("")
             : `<div class="empty-state"><div class="empty-state__icon">⭐</div><h3>All done!</h3><p>No pending ratings</p><a href="/games" class="btn btn--primary" data-link>Browse Games</a></div>`
@@ -56,10 +57,10 @@ export function registerRatingsRoute() {
               .querySelectorAll(".star")
               .forEach(
                 (st, i) =>
-                  (st.style.color = i < v ? "#FFD700" : "var(--gray-300)")
+                  (st.style.color = i < v ? "#FFD700" : "var(--gray-300)"),
               );
             box.dataset.rating = v;
-          })
+          }),
       );
       $$(".submit-rating").forEach(
         (btn) =>
@@ -81,14 +82,14 @@ export function registerRatingsRoute() {
               });
               toast("success", "Rated! ⭐");
               box.innerHTML =
-                '<div style="text-align:center;padding:var(--space-4);color:var(--success)">✅ Submitted!</div>';
+                '<div style="text-align:center;padding:var(--space-4);color:var(--success)">Submitted!</div>';
             } catch (e) {
               toast("error", e.message);
               btn.disabled = false;
               btn.classList.remove("btn--loading");
             }
-          })
+          }),
       );
-    })
+    }),
   );
 }

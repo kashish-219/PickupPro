@@ -1,6 +1,7 @@
 /**
  * MODULE: auth
  * Auth state management.
+ * Created by: Abhimanyu Dudeja
  */
 import { Auth } from "./api.js";
 import { toast } from "./toast.js";

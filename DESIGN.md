@@ -1,847 +1,661 @@
-# PickupPro - Design Document
+# PickupPro — Design Document
+
+> **Course:** CS5610 Web Development · Northeastern University · Spring 2025
+> **Authors:** Kashish Rahulbhai Khatri & Abhimanyu Dudeja
+
+---
 
 ## Table of Contents
-1. [Project Description](#project-description)
-2. [User Personas](#user-personas)
-3. [User Stories](#user-stories)
-4. [System Architecture](#system-architecture)
-5. [Database Design](#database-design)
-6. [API Endpoints](#api-endpoints)
-7. [Design Mockups](#design-mockups)
+
+1. [Project Description](#1-project-description)
+2. [User Personas](#2-user-personas)
+3. [User Stories](#3-user-stories)
+4. [Design Mockups](#4-design-mockups)
+5. [System Architecture](#5-system-architecture)
+6. [Database Design](#6-database-design)
+7. [API Endpoints](#7-api-endpoints)
 
 ---
 
-## Project Description
+## 1. Project Description
 
-**PickupPro** is a community-driven platform that connects local athletes looking to play casual pickup sports games without the hassle of group chat coordination. 
+### Overview
+
+**PickupPro** is a community-driven web platform that connects local athletes to casual pickup sports games — without the mess of group chats, no-shows, or not knowing who you're playing with.
+
+Instead of coordinating through cluttered WhatsApp groups, players can create games, browse open games nearby, join with one click, and build a community reputation through peer-to-peer ratings — all from a clean, fast, mobile-friendly web app.
 
 ### Problem Statement
-Finding pickup games is frustrating. Group chats become cluttered, confirmations get lost, and there's no accountability for no-shows or poor sportsmanship. People new to a city have no easy way to discover local games or build a network of reliable playing partners.
+
+Finding and organizing pickup sports today is painful:
+
+- **Group chats** get cluttered, confirmations get buried, and "maybe" responses cause mismatched player counts on game day
+- **No accountability** — people no-show with zero consequences, and bad actors ruin games for everyone
+- **Newcomers to a city** have no reliable way to discover local games or find regular playing partners
+- **Organizers** spend hours chasing RSVPs every week instead of just showing up and playing
 
 ### Solution
-PickupPro provides a centralized platform where:
-- **Players can create games** by specifying sport type, location, date, time, and player limits
-- **Others browse and join** with a single click
-- **Automatic roster management** handles player caps and waitlists
-- **Reputation system** allows post-game ratings, fostering accountability
-- **Player discovery** helps users find reliable playing partners
+
+PickupPro solves this by providing:
+
+- **Game Board** — Browse all upcoming games, filter by sport, city, date, and status
+- **One-Click Join** — Secure your spot instantly; auto-join the waitlist when a game is full
+- **Host Tools** — Create, edit, cancel, and complete games with full roster and waitlist management
+- **Reputation System** — Rate players 1–5 stars after every completed game with optional comments
+- **Player Profiles** — View anyone's stats, upcoming fixtures, sports, and peer reviews
+- **My Games Dashboard** — Track all your games: upcoming, hosting, playing, and past with inline rating
 
 ### Supported Sports
-- 🏀 Basketball
-- ⚽ Soccer/Football
-- 🎾 Tennis
-- 🏐 Volleyball
-- ⚾ Baseball
-- 🏏 Cricket
-- 🏸 Badminton
-- 🏃 Running/Jogging
 
-### Key Features
-1. **Game Management** - Create, edit, cancel, and complete games
-2. **Smart Joining** - Join games or auto-waitlist when full
-3. **Reputation System** - Rate players on sportsmanship after games
-4. **Player Profiles** - Showcase sports interests, skill levels, and ratings
-5. **Player Discovery** - Search and find players in the community
+🏀 Basketball · ⚽ Soccer · 🎾 Tennis · 🏐 Volleyball · ⚾ Baseball · 🏏 Cricket · 🏸 Badminton · 🏃 Running · 🎯 Other
+
+### Tech Stack
+
+| Layer      | Technology              | Reason                             |
+| ---------- | ----------------------- | ---------------------------------- |
+| Frontend   | Vanilla JavaScript SPA  | Course requirement — no frameworks |
+| Backend    | Node.js + Express       | Course requirement                 |
+| Database   | MongoDB (Native Driver) | Course requirement — no Mongoose   |
+| Auth       | JWT + bcrypt            | Stateless, industry-standard       |
+| Deployment | Docker + Render.com     | Containerized, free cloud hosting  |
 
 ---
 
-## User Personas
+## 2. User Personas
 
-### Persona 1: Newcomer Athlete ("Mohit")
+### Persona 1 — The Newcomer Athlete
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  👤 MOHIT SHARMA                                                │
-│  Age: 26 | Software Engineer | Boston, MA                       │
-├─────────────────────────────────────────────────────────────────┤
-│  BACKGROUND                                                     │
-│  • Recently moved to Boston for work at a tech startup          │
-│  • Played basketball and cricket throughout college in India    │
-│  • Doesn't know anyone in the city who plays sports             │
-│  • Lives in Burlington, works remotely most days                │
-├─────────────────────────────────────────────────────────────────┤
-│  GOALS                                                          │
-│  • Find pickup basketball games near Northeastern campus        │
-│  • Meet people with similar interests                           │
-│  • Stay active and maintain work-life balance                   │
-├─────────────────────────────────────────────────────────────────┤
-│  FRUSTRATIONS                                                   │
-│  • Doesn't know local parks or courts                           │
-│  • Facebook groups are cluttered and hard to navigate           │
-│  • Nervous about showing up to games alone                      │
-├─────────────────────────────────────────────────────────────────┤
-│  TECH COMFORT                                                   │
-│  ████████████░░░ Advanced                                       │
-│  Uses apps daily, comfortable with new platforms                │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│  👤  MOHIT SHARMA                                           │
+│      Age 26 · Software Engineer · Burlington, MA            │
+├─────────────────────────────────────────────────────────────┤
+│  BACKGROUND                                                 │
+│  • Recently relocated from India to Boston for a tech job   │
+│  • Played basketball and cricket throughout college         │
+│  • Has no existing social network in the city               │
+│  • Works remotely — lots of free time but no connections    │
+├──────────────────────────┬──────────────────────────────────┤
+│  GOALS                   │  FRUSTRATIONS                   │
+│  • Find pickup basketball│  • Doesn't know local courts     │
+│    near Northeastern     │  • Facebook groups are cluttered │
+│  • Meet people with      │  • Nervous showing up to         │
+│    similar interests     │    unknown games alone           │
+│  • Stay active without   │  • Uncertain if posted games     │
+│    committing to leagues │    are real or abandoned         │
+└──────────────────────────┴──────────────────────────────────┘
 ```
 
-**Quote:** *"I just want to find a game, know it's actually happening, and show up without awkwardness."*
+> _"I just want to find a real game, know it's actually happening, and show up without awkwardness. Is that too much to ask?"_
 
 ---
 
-### Persona 2: Pickup Game Organizer ("Joy")
+### Persona 2 — The Organizer
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  👤 JOY CHEN                                                    │
-│  Age: 32 | Marketing Manager | Cambridge, MA                    │
-├─────────────────────────────────────────────────────────────────┤
-│  BACKGROUND                                                     │
-│  • Organizes weekly Sunday soccer games for 3 years             │
-│  • Uses WhatsApp group with 45 members                          │
-│  • Spends hours every week chasing confirmations                │
-│  • Games often have too many or too few players                 │
-├─────────────────────────────────────────────────────────────────┤
-│  GOALS                                                          │
-│  • Stop being the "group chat admin"                            │
-│  • Let players self-organize and confirm attendance             │
-│  • Maintain consistent player count for balanced games          │
-├─────────────────────────────────────────────────────────────────┤
-│  FRUSTRATIONS                                                   │
-│  • "Who's in?" messages get buried in chat                      │
-│  • People say "maybe" and don't show up                         │
-│  • No easy way to track who confirmed vs who showed up          │
-├─────────────────────────────────────────────────────────────────┤
-│  TECH COMFORT                                                   │
-│  ██████████░░░░░ Intermediate                                   │
-│  Comfortable with common apps, values simplicity                │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│  👤  JOY CHEN                                               │
+│      Age 32 · Marketing Manager · Cambridge, MA             │
+├─────────────────────────────────────────────────────────────┤
+│  BACKGROUND                                                 │
+│  • Organizes weekly Sunday soccer for 3+ years              │
+│  • Manages a WhatsApp group of 45 players                   │
+│  • Spends 2–3 hours every week chasing confirmations        │
+│  • Games often have mismatched player counts                │
+├──────────────────────────┬──────────────────────────────────┤
+│  GOALS                   │  FRUSTRATIONS                   │
+│  • Stop being the group  │  • "Who's in?" gets buried       │
+│    chat admin            │    in chat noise                 │
+│  • Let players self-     │  • People say "maybe" then       │
+│    organize & confirm    │    ghost on game day             │
+│  • Build a pool of       │  • No accountability for         │
+│    reliable, vetted      │    no-shows or bad behavior      │
+│    players               │                                  │
+└──────────────────────────┴──────────────────────────────────┘
 ```
 
-**Quote:** *"I love playing, but organizing has become a part-time job. I need something that handles the logistics."*
+> _"I love playing soccer, but organizing has become a part-time job. I need something that handles the logistics so I can just show up and play."_
 
 ---
 
-### Persona 3: Cautious Player ("Emma")
+### Persona 3 — The Cautious Player
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  👤 EMMA RODRIGUEZ                                              │
-│  Age: 28 | Graduate Student | Somerville, MA                    │
-├─────────────────────────────────────────────────────────────────┤
-│  BACKGROUND                                                     │
-│  • Plays recreational tennis and volleyball                     │
-│  • Had bad experiences with overly competitive players          │
-│  • Once showed up to a "casual" game that was way too intense   │
-│  • Values inclusive, friendly environments                      │
-├─────────────────────────────────────────────────────────────────┤
-│  GOALS                                                          │
-│  • Find games with the right skill level and vibe               │
-│  • Know who she's playing with before committing                │
-│  • Avoid aggressive or unreliable players                       │
-├─────────────────────────────────────────────────────────────────┤
-│  FRUSTRATIONS                                                   │
-│  • No way to know if players are reliable or friendly           │
-│  • "Casual" means different things to different people          │
-│  • Feels unsafe showing up to random games alone                │
-├─────────────────────────────────────────────────────────────────┤
-│  TECH COMFORT                                                   │
-│  ████████░░░░░░░ Moderate                                       │
-│  Uses apps but prefers intuitive interfaces                     │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│  👤  EMMA RODRIGUEZ                                         │
+│      Age 28 · Graduate Student · Somerville, MA             │
+├─────────────────────────────────────────────────────────────┤
+│  BACKGROUND                                                 │
+│  • Plays recreational tennis and volleyball                 │
+│  • Had bad experiences with overly competitive players      │
+│  • Once showed up to a "casual" game that was intense       │
+│  • Values inclusive, friendly environments above all        │
+├──────────────────────────┬──────────────────────────────────┤
+│  GOALS                   │  FRUSTRATIONS                   │
+│  • Find games with the   │  • No way to vet players before  │
+│    right skill level AND │    joining a random game         │
+│    the right vibe        │  • "Casual" means different      │
+│  • Know who she's        │    things to different people    │
+│    playing with before   │  • Feels unsafe showing up       │
+│    committing            │    alone to unknown games        │
+└──────────────────────────┴──────────────────────────────────┘
 ```
 
-**Quote:** *"I want to play sports, not deal with drama. Knowing someone has good ratings would make me way more likely to join."*
+> _"I want to play sports, not deal with drama. Seeing that someone has 4.8 stars from 50 reviews would make me way more likely to join their game."_
 
 ---
 
-## User Stories
+## 3. User Stories
 
-### Games Management (Kashish Rahulbhai Khatri)
+### 🎮 Games Management _(Kashish Rahulbhai Khatri)_
 
-#### Story 1: Create a Pickup Game
-**As a** player  
-**I want to** create a pickup game with sport, location, date, time, and max players  
-**So that** others can find and join it
+---
+
+#### Story 1 — Browse & Filter Games
+
+> _As a visitor or player, I want to browse all games and filter by sport, date, city, and status, so that I can find games that fit my schedule and location._
+
+**Scenario:** Emma is looking for a casual tennis game this weekend in Cambridge. She clicks the "Tennis" filter pill, sees 4 upcoming games near her, and picks the one hosted by someone with a 4.9 rating — all without creating an account.
 
 **Acceptance Criteria:**
-- User can select from 8 supported sports
-- User can enter location with address details
-- User can set date and time (must be in future)
-- User can set minimum and maximum player limits
-- User can add optional description and skill level
-- Game appears in browse list immediately after creation
 
-**Example Scenario:**
-> Mohit wants to organize a basketball game at Cabot Physical Education Center on Saturday at 2pm. He creates a game, sets max players to 10, marks it as "Intermediate" skill level, and adds "Bring both light and dark shirts for teams!"
+- Sport filter pills for all 9 sports — active pill is highlighted
+- Status dropdown: Upcoming, Completed, All
+- Date picker and city text input for further filtering
+- Game cards show sport badge, status (Open / Full / Cancelled), title, date, city, player count, host rating
+- Cancelled games show "Cancelled" in red — not "Open"
+- Empty state shown when no results match
 
 ---
 
-#### Story 2: Browse and Filter Games
-**As a** player  
-**I want to** browse and filter games by sport, date, and location  
-**So that** I can find games that fit my schedule
+#### Story 2 — Create a Pickup Game
+
+> _As a logged-in player, I want to create a pickup game by specifying sport, title, location, date, time, and player limits, so that others can find and join it._
+
+**Scenario:** Joy is tired of managing 45-person WhatsApp groups. She creates "Sunday Soccer at Magazine Beach" — picks Soccer, sets max 12 players, marks it Intermediate, adds a description. The game appears in the browse list immediately and players join on their own.
 
 **Acceptance Criteria:**
-- User can view all upcoming games in a list/card view
-- User can filter by sport type (multi-select)
-- User can filter by date range
-- User can search by location keyword
-- Results update in real-time as filters change
-- Games show key info: sport, date, time, location, spots available
 
-**Example Scenario:**
-> Emma wants to find a tennis game this weekend in Cambridge. She filters by "Tennis" and "This Weekend" and sees three games with open spots.
+- Visual sport selector grid (emoji + name, radio buttons)
+- Title, location name, and city required; address optional
+- Date/time picker with minimum = 1 hour from now
+- Min/max player count fields and skill level dropdown
+- Optional description textarea
+- After creation, redirected to the new game's detail page
 
 ---
 
-#### Story 3: Join a Game or Waitlist
-**As a** player  
-**I want to** join a game or be added to waitlist if full  
-**So that** I can secure my spot
+#### Story 3 — Join a Game or Waitlist
+
+> _As a player, I want to join a game or be placed on the waitlist if it's full, so that I can secure my spot or queue up without missing out._
+
+**Scenario:** Mohit finds Joy's soccer game showing 12/12 full. He clicks "Join Waitlist" and sees he's position #2. When another player leaves, he's automatically promoted to the roster without doing anything.
 
 **Acceptance Criteria:**
-- "Join Game" button visible for games with open spots
-- "Join Waitlist" button visible for full games
-- User cannot join their own games
-- User cannot join games in the past
-- User receives confirmation of join/waitlist status
-- Waitlist position shown to waitlisted users
 
-**Example Scenario:**
-> Mohit finds Joy's Sunday soccer game. It shows 12/12 players, so he clicks "Join Waitlist" and sees he's #2 on the waitlist.
+- "🎮 Join Game" button shown when spots are available
+- "📝 Join Waitlist" shown when game is at capacity
+- Waitlisted users see their current position (#1, #2, etc.)
+- Cannot join completed, cancelled, or past-date games
+- Toast notification confirms join or waitlist placement
 
 ---
 
-#### Story 4: Leave a Game
-**As a** player  
-**I want to** leave a game I previously joined  
-**So that** my spot opens for others
+#### Story 4 — Host Game Management
+
+> _As a game host, I want to edit, cancel, complete, and optionally join my own game, so that I can manage the full game lifecycle and participate too._
+
+**Scenario:** Joy's Sunday soccer wraps up. She clicks "Complete" — all players now see a "⭐ Rate Players" button. Next week she realizes she wants to join as a player too, so she clicks "🎮 Join Game" right from the host action bar.
 
 **Acceptance Criteria:**
-- "Leave Game" button visible on games user has joined
-- Leaving moves first waitlisted player to roster automatically
-- User receives confirmation of leaving
-- Cannot leave games that have already completed
 
-**Example Scenario:**
-> Emma realizes she has a conflict and needs to leave Sunday's volleyball game. She clicks "Leave" and the system notifies the first waitlisted player that they're now on the roster.
+- Host sees Edit, Complete, Cancel buttons alongside Join/Leave for their own participation
+- Edit: update sport, title, location, date, players, skill, description
+- Complete: marks game done and unlocks rating for all participants
+- Cancel: shows "Cancelled" badge on the card in red, not "Open"
+- Host can join their own game and appear in the player list
 
 ---
 
-#### Story 5: Manage Game as Host
-**As a** host  
-**I want to** edit, cancel, or mark a game as completed  
-**So that** I can manage the game lifecycle
+#### Story 5 — Leave a Game
+
+> _As a player, I want to leave a game I joined, so that my spot opens up for others who are waiting._
+
+**Scenario:** Emma has a last-minute conflict and can't make Sunday volleyball. She clicks "👋 Leave" and confirms. The first waitlisted player is automatically promoted to the roster.
 
 **Acceptance Criteria:**
-- Host can edit game details before game starts
-- Host can cancel game (with optional reason)
-- Host can mark game as "Completed" after it ends
-- Completed status enables rating functionality
-- Cancelled games show as cancelled, not deleted
 
-**Example Scenario:**
-> Joy's Sunday soccer game finishes. She marks it as "Completed" so players can now rate each other's sportsmanship.
+- "👋 Leave" button visible for games the user has joined
+- Confirmation dialog before leaving
+- First waitlist player is automatically promoted if game was full
+- "Leave Waitlist" option for waitlisted users
+- Cannot leave a completed or cancelled game
 
 ---
 
-#### Story 6: View and Manage Roster
-**As a** host  
-**I want to** view and manage the roster of players who joined my game  
-**So that** I can see who's participating
+### 👤 User Profiles & Reputation _(Abhimanyu Dudeja)_
+
+---
+
+#### Story 6 — Register & Set Up Profile
+
+> _As a new visitor, I want to register with my name, email, password, and favorite sports, so that I can participate in the PickupPro community._
+
+**Scenario:** Mohit arrives in Boston knowing nobody. He registers in under a minute — picks his name, email, password, selects Basketball and Cricket from the sport grid. He's immediately logged in and can browse and join games.
 
 **Acceptance Criteria:**
-- Host sees list of all confirmed players
-- Host sees waitlist with position numbers
-- Host can remove players if needed
-- Roster shows player names and ratings
-- Player count updates in real-time
 
-**Example Scenario:**
-> Joy checks her game roster and sees 12 confirmed players with an average rating of 4.2 stars, plus 3 people on the waitlist.
+- Name, email, and password (min 6 chars) are required
+- Visual sport checkbox grid shown at registration
+- JWT token issued; user redirected to homepage on success
+- Logged-in state persists across page refreshes via localStorage
 
 ---
 
-### User Profiles & Reputation (Abhimanyu Dudeja)
+#### Story 7 — View Another Player's Profile with Upcoming Fixtures
 
-#### Story 7: Create and Edit Profile
-**As a** new user  
-**I want to** create and edit my profile with sports interests and skill levels  
-**So that** others know who I am
+> _As a player, I want to view any player's full profile including their upcoming games, stats, sports, and reviews, so that I can decide whether to join their game._
+
+**Scenario:** Emma sees Joy is hosting a soccer game. She clicks Joy's name and sees a 4.8-star rating from 52 reviews, 24 games hosted, 3 upcoming fixtures this month, and reviews saying "Best organizer, always on time!" Emma feels confident joining.
 
 **Acceptance Criteria:**
-- User can set display name and bio
-- User can select favorite sports (multi-select)
-- User can set skill level per sport (Beginner/Intermediate/Advanced)
-- User can add optional profile photo URL
-- Profile changes save immediately
 
-**Example Scenario:**
-> Mohit creates his profile, selects Basketball (Advanced) and Cricket (Intermediate), and adds a bio: "Software engineer who misses his college basketball days!"
+- Stats: average rating, total reviews, games hosted, games played
+- Bio and sports interests displayed with emoji badges
+- 📅 Upcoming Fixtures section — all upcoming games with date, time, city, HOST/PLAYER badge, player count; each is clickable
+- Recent reviews with star scores, reviewer names, and comments
+- "✏️ Edit My Profile" button only shown on own profile
 
 ---
 
-#### Story 8: Rate Another Player
-**As a** player  
-**I want to** rate another player's sportsmanship after a completed game  
-**So that** the community knows who's reliable
+#### Story 8 — Search & Discover Players
+
+> _As a player, I want to instantly search for players by name and filter by sport, so that I can find regular playing partners in the community._
+
+**Scenario:** Mohit types "cricket" into the search bar and instantly — as he types, no button needed — sees 8 community members who play cricket. He clicks one with a 4.6 rating and sees they're hosting a game next Saturday.
 
 **Acceptance Criteria:**
-- Can only rate players from games both participated in
-- Can only rate after game is marked complete
-- Rating is 1-5 stars for sportsmanship
-- Optional written comment (max 500 chars)
-- Each player can only rate another player once per game
 
-**Example Scenario:**
-> After Sunday's soccer game, Joy rates Mohit 5 stars with comment: "Great attitude, showed up on time, and played fair!"
+- Instant client-side filtering as user types — no search button needed
+- Sport dropdown filters by sports the player plays
+- Result count banner: "Showing 8 of 101 players matching 'cricket'"
+- Player cards show name, star rating, and sports emojis
+- Empty state with helpful message when no matches found
 
 ---
 
-#### Story 9: View Own Profile
-**As a** player  
-**I want to** view my own profile with average rating and rating history  
-**So that** I understand my reputation
+#### Story 9 — Rate Players After a Completed Game
+
+> _As a player who participated in a completed game, I want to rate other players from that game, so that the community can identify reliable, sportsmanlike players._
+
+**Scenario:** After Sunday soccer, Joy opens My Games → Past Games. She sees the game card with 2 unrated players shown inline with star selectors. She clicks 5 stars for Mohit and hits Rate — done. No page reload. Mohit's profile rating updates immediately.
 
 **Acceptance Criteria:**
-- Profile shows average rating (1-5 stars)
-- Profile shows total number of ratings received
-- Profile shows recent ratings with comments
-- Profile shows list of sports and skill levels
-- Profile shows games hosted count
 
-**Example Scenario:**
-> Mohit checks his profile and sees he has a 4.7 average rating from 12 ratings, with his most recent being "Always brings positive energy!"
+- Ratings only available for games marked "Completed" by the host
+- 1–5 star selector; optional written comment available on /ratings/pending page
+- Each player can only rate each other once per game
+- Already-rated players show "✅ Done" state
+- Available from both /ratings/pending AND My Games → Past Games tab
 
 ---
 
-#### Story 10: View Another Player's Profile
-**As a** player  
-**I want to** view another player's profile with their average rating, recent ratings, and game history  
-**So that** I can decide whether to join their game
+#### Story 10 — My Games Dashboard with Past Games
+
+> _As a player, I want to see all my games organized by role and status, with inline rating for past games, so that I can track everything and rate players without navigating away._
+
+**Scenario:** Mohit opens My Games and clicks "📜 Past Games." He sees 6 completed games. The first card for last week's basketball shows 3 players he hasn't rated — star selectors right on the card. He rates all 3 without leaving the page.
 
 **Acceptance Criteria:**
-- Can view any public player profile
-- Shows average rating and breakdown
-- Shows recent ratings (last 10)
-- Shows games hosted and participated
-- Shows sports interests and skill levels
 
-**Example Scenario:**
-> Emma is considering joining Joy's soccer game. She clicks Joy's name and sees she has a 4.8 rating with 50+ reviews praising her organization skills.
-
----
-
-#### Story 11: View Past Games and Ratings
-**As a** player  
-**I want to** see a list of my past games and ratings I've received  
-**So that** I can track my activity
-
-**Acceptance Criteria:**
-- Shows list of all games participated in
-- Shows list of all games hosted
-- Separated by completed/upcoming/cancelled
-- Shows ratings received for each completed game
-- Can filter by sport type
-
-**Example Scenario:**
-> Mohit views his history and sees he's played 8 games in the past month: 5 basketball and 3 soccer, with ratings for each.
+- Tabs: All, Hosting, Playing, 📜 Past Games
+- All / Hosting / Playing shows a grid of game cards
+- Past Games shows completed games with date, sport-colored header, location, player count
+- Each past game card shows unrated players inline with star selector + Rate button
+- After rating, row fades and shows "✅ Done" — no page reload
+- "✅ All players rated" shown when no pending ratings remain for a game
 
 ---
 
-#### Story 12: Search and Discover Players
-**As a** player  
-**I want to** search for and discover other players in the community  
-**So that** I can find regular playing partners
+## 4. Design Mockups
 
-**Acceptance Criteria:**
-- Can search players by name
-- Can filter by sport interest
-- Can filter by minimum rating
-- Results show name, rating, and sports
-- Can click through to full profile
-
-**Example Scenario:**
-> Emma searches for tennis players with 4+ rating and finds 15 players in the Boston area she might want to play with.
-
----
-
-## System Architecture
+### Mockup 1 — Browse All Games (`/games`)
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                              CLIENT LAYER                               │
-│                                                                         │
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │                    Vanilla JavaScript SPA                        │   │
-│   │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐        │   │
-│   │  │  Games   │  │  Users   │  │ Profiles │  │  Auth    │        │   │
-│   │  │  Module  │  │  Module  │  │  Module  │  │  Module  │        │   │
-│   │  └──────────┘  └──────────┘  └──────────┘  └──────────┘        │   │
-│   │                                                                  │   │
-│   │  Client-Side Rendering │ Fetch API │ ES Modules                 │   │
-│   └─────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────┬─────────────────────────────────────┘
-                                    │ HTTP/REST
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                              SERVER LAYER                               │
-│                                                                         │
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │                     Node.js + Express                            │   │
-│   │                                                                  │   │
-│   │  ┌──────────────────┐  ┌──────────────────┐                     │   │
-│   │  │   Routes         │  │   Middleware     │                     │   │
-│   │  │  • /api/games    │  │  • JWT Auth      │                     │   │
-│   │  │  • /api/users    │  │  • Error Handler │                     │   │
-│   │  │  • /api/ratings  │  │  • CORS          │                     │   │
-│   │  │  • /api/auth     │  │  • Static Files  │                     │   │
-│   │  └──────────────────┘  └──────────────────┘                     │   │
-│   │                                                                  │   │
-│   │  ES Modules │ No Mongoose │ Native MongoDB Driver               │   │
-│   └─────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────┬─────────────────────────────────────┘
-                                    │ MongoDB Protocol
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                              DATA LAYER                                 │
-│                                                                         │
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │                      MongoDB Database                            │   │
-│   │                                                                  │   │
-│   │  ┌────────────────┐  ┌────────────────┐  ┌────────────────┐     │   │
-│   │  │     users      │  │     games      │  │    ratings     │     │   │
-│   │  │  Collection    │  │  Collection    │  │  Collection    │     │   │
-│   │  │                │  │  (1000+ docs)  │  │                │     │   │
-│   │  └────────────────┘  └────────────────┘  └────────────────┘     │   │
-│   │                                                                  │   │
-│   └─────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-### Technology Stack
-
-| Layer | Technology | Justification |
-|-------|------------|---------------|
-| Frontend | Vanilla JS + HTML5 + CSS3 | Per requirements, no frameworks |
-| Backend | Node.js + Express | Required by rubric |
-| Database | MongoDB (Native Driver) | Required, no Mongoose allowed |
-| Auth | JWT Tokens | Stateless, scalable |
-| Deployment | Docker + Render | Containerized, easy deployment |
-
----
-
-## Database Design
-
-### Collections Overview
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           MongoDB Collections                           │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐ │
-│  │     USERS       │      │     GAMES       │      │    RATINGS      │ │
-│  │─────────────────│      │─────────────────│      │─────────────────│ │
-│  │ _id             │◄────┐│ _id             │◄────┐│ _id             │ │
-│  │ email           │     ││ hostId ─────────┼─────┤│ gameId ─────────┼─┘
-│  │ password (hash) │     ││ sport           │     ││ fromUserId ─────┼─┐
-│  │ name            │     ││ title           │     ││ toUserId ───────┼─┤
-│  │ bio             │     ││ description     │     ││ score (1-5)     │ │
-│  │ sports[]        │     ││ location        │     ││ comment         │ │
-│  │ skillLevels{}   │     ││ date            │     ││ createdAt       │ │
-│  │ avatarUrl       │     ││ maxPlayers      │     │└─────────────────┘ │
-│  │ createdAt       │     ││ minPlayers      │     │                    │
-│  └─────────────────┘     ││ players[] ──────┼─────┘                    │
-│          ▲               ││ waitlist[]      │                          │
-│          │               ││ status          │                          │
-│          └───────────────┼│ skillLevel      │                          │
-│                          ││ createdAt       │                          │
-│                          │└─────────────────┘                          │
-│                          │       │                                     │
-│                          │       │ 1000+ records                       │
-│                          │       │ (seed data)                         │
-│                          │       ▼                                     │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-### Users Collection Schema
-
-```javascript
-{
-  _id: ObjectId,
-  email: String,           // Unique, required
-  password: String,        // Hashed with bcrypt
-  name: String,            // Display name
-  bio: String,             // Optional, max 500 chars
-  sports: [String],        // Array of sport interests
-  skillLevels: {           // Skill per sport
-    "Basketball": "Advanced",
-    "Tennis": "Beginner"
-  },
-  avatarUrl: String,       // Optional profile image
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-**Indexes:**
-- `email`: Unique index
-- `name`: Text index for search
-- `sports`: Regular index for filtering
-
----
-
-### Games Collection Schema
-
-```javascript
-{
-  _id: ObjectId,
-  hostId: ObjectId,        // Reference to users
-  sport: String,           // One of 8 supported sports
-  title: String,           // Game title
-  description: String,     // Optional details
-  location: {
-    name: String,          // "Cabot Physical Education Center"
-    address: String,       // "219 Cabot St, Boston, MA"
-    city: String,          // "Boston"
-    coordinates: {         // Optional for future map integration
-      lat: Number,
-      lng: Number
-    }
-  },
-  date: Date,              // Game date and time
-  maxPlayers: Number,      // Player cap
-  minPlayers: Number,      // Minimum to play
-  players: [ObjectId],     // Array of user IDs
-  waitlist: [ObjectId],    // Ordered waitlist
-  status: String,          // "upcoming" | "completed" | "cancelled"
-  skillLevel: String,      // "Beginner" | "Intermediate" | "Advanced" | "All Levels"
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-**Indexes:**
-- `hostId`: Regular index
-- `sport`: Regular index
-- `date`: Regular index
-- `status`: Regular index
-- `location.city`: Text index
-
----
-
-### Ratings Collection Schema
-
-```javascript
-{
-  _id: ObjectId,
-  gameId: ObjectId,        // Reference to games
-  fromUserId: ObjectId,    // Who gave the rating
-  toUserId: ObjectId,      // Who received the rating
-  score: Number,           // 1-5 stars
-  comment: String,         // Optional, max 500 chars
-  createdAt: Date
-}
-```
-
-**Indexes:**
-- `gameId`: Regular index
-- `toUserId`: Regular index for profile lookups
-- `fromUserId, toUserId, gameId`: Compound unique index (one rating per pair per game)
-
----
-
-## API Endpoints
-
-### Authentication Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register new user |
-| POST | `/api/auth/login` | Login, receive JWT |
-| GET | `/api/auth/me` | Get current user (protected) |
-
-### Games Endpoints (Kashish Rahulbhai Khatri)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/games` | List all games (with filters) |
-| GET | `/api/games/:id` | Get single game details |
-| POST | `/api/games` | Create new game (protected) |
-| PUT | `/api/games/:id` | Update game (host only) |
-| DELETE | `/api/games/:id` | Cancel game (host only) |
-| POST | `/api/games/:id/join` | Join game or waitlist (protected) |
-| POST | `/api/games/:id/leave` | Leave game (protected) |
-| PUT | `/api/games/:id/complete` | Mark as completed (host only) |
-| GET | `/api/games/:id/roster` | Get roster and waitlist |
-
-### Users Endpoints (Abhimanyu Dudeja)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/users` | Search/list users |
-| GET | `/api/users/:id` | Get user profile |
-| PUT | `/api/users/:id` | Update own profile (protected) |
-| GET | `/api/users/:id/games` | Get user's game history |
-| GET | `/api/users/:id/ratings` | Get ratings received |
-
-### Ratings Endpoints (Abhimanyu Dudeja)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/ratings` | Rate a player (protected) |
-| GET | `/api/ratings/game/:gameId` | Get all ratings for a game |
-| GET | `/api/ratings/pending` | Get games where user can rate (protected) |
-
----
-
-## Design Mockups
-
-### Homepage / Games Browse
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│  🏀 PickupPro                              [Browse] [My Games] [Login]  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   ╔═══════════════════════════════════════════════════════════════╗     │
-│   ║                                                               ║     │
-│   ║         Find Your Next Game.  Play Your Best.                 ║     │
-│   ║                                                               ║     │
-│   ║   [🏀] [⚽] [🎾] [🏐] [⚾] [🏏] [🏸] [🏃]                      ║     │
-│   ║                                                               ║     │
-│   ╚═══════════════════════════════════════════════════════════════╝     │
-│                                                                         │
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │ FILTERS                                                         │   │
-│   │ Sport: [All ▼]  Date: [Any ▼]  Location: [________]  [Search]   │   │
-│   └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐     │
-│   │ 🏀 Sunday Basketball        │  │ ⚽ Weekly Soccer Pickup     │     │
-│   │ ─────────────────────────── │  │ ─────────────────────────── │     │
-│   │ 📍 Cabot Center, Boston     │  │ 📍 Magazine Beach, Cambridge│     │
-│   │ 📅 Feb 16, 2025 @ 2:00 PM   │  │ 📅 Feb 17, 2025 @ 10:00 AM  │     │
-│   │ 👥 8/10 spots               │  │ 👥 FULL (3 waitlist)        │     │
-│   │ ⭐ Host: Joy (4.8)          │  │ ⭐ Host: Marcus (4.5)       │     │
-│   │                             │  │                             │     │
-│   │        [View Details]       │  │    [Join Waitlist]          │     │
-│   └─────────────────────────────┘  └─────────────────────────────┘     │
-│                                                                         │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐     │
-│   │ 🎾 Tennis Doubles           │  │ 🏃 Morning Run Club         │     │
-│   │ ─────────────────────────── │  │ ─────────────────────────── │     │
-│   │ 📍 MIT Tennis Courts        │  │ 📍 Charles River Esplanade  │     │
-│   │ 📅 Feb 18, 2025 @ 6:00 PM   │  │ 📅 Feb 19, 2025 @ 6:30 AM   │     │
-│   │ 👥 2/4 spots                │  │ 👥 5/15 spots               │     │
-│   │ ⭐ Host: Emma (4.9)         │  │ ⭐ Host: Alex (4.7)         │     │
-│   │                             │  │                             │     │
-│   │        [Join Game]          │  │        [Join Game]          │     │
-│   └─────────────────────────────┘  └─────────────────────────────┘     │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│  🏀 PickupPro         🎮 Games  👥 Players  📋 My Games    👤 Demo  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  [All] [🏀 Basketball] [⚽ Soccer] [🎾 Tennis] [🏐 Volleyball]      │
+│  [⚾ Baseball] [🏏 Cricket] [🏸 Badminton] [🏃 Running] [🎯 Other]  │
+│                                                                     │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │  STATUS          DATE              CITY           [🔍 Search]│   │
+│  │  [Upcoming ▾]   [dd/mm/yyyy  📅]  [Any city    ]             │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+│                                                                     │
+│  ┌─────────────────────┐ ┌─────────────────────┐ ┌──────────────┐  │
+│  │ 🏀 Basketball  OPEN │ │ 🏏 Cricket     OPEN │ │🎯 Other CNCL │  │
+│  │─────────────────────│ │─────────────────────│ │──────────────│  │
+│  │ Sunday Hoops        │ │ T20 Weekend Match    │ │ Casual Meetup│  │
+│  │ 📍 Cabot, Boston    │ │ 📍 Harvard, Boston  │ │ 📍 Franklin  │  │
+│  │ 📅 Feb 23 · 2:00 PM │ │ 📅 Feb 22 · 10 AM  │ │ 📅 Feb 20    │  │
+│  │ 👥 7/10             │ │ 👥 9/12             │ │ 👥 2/8       │  │
+│  │ ⭐ Host: 4.7        │ │ ⭐ Host: 4.9        │ │ ⭐ Host: 4.2 │  │
+│  │   [🎮 Join Game]    │ │   [🎮 Join Game]    │ │  [👁️ View]  │  │
+│  └─────────────────────┘ └─────────────────────┘ └──────────────┘  │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-### Create Game Form
+### Mockup 2 — Game Detail Page (`/games/:id`) — Host View
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│  🏀 PickupPro                    [Browse] [My Games] [Profile] [Logout] │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │                      CREATE A NEW GAME                          │   │
-│   └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │                                                                 │   │
-│   │  Sport *                                                        │   │
-│   │  ┌──────────────────────────────────────────────────────────┐   │   │
-│   │  │ [🏀] [⚽] [🎾] [🏐] [⚾] [🏏] [🏸] [🏃]                 │   │   │
-│   │  └──────────────────────────────────────────────────────────┘   │   │
-│   │                                                                 │   │
-│   │  Game Title *                                                   │   │
-│   │  ┌──────────────────────────────────────────────────────────┐   │   │
-│   │  │ Sunday Basketball Run                                     │   │   │
-│   │  └──────────────────────────────────────────────────────────┘   │   │
-│   │                                                                 │   │
-│   │  Location *                                                     │   │
-│   │  ┌──────────────────────────────────────────────────────────┐   │   │
-│   │  │ Cabot Physical Education Center                           │   │   │
-│   │  └──────────────────────────────────────────────────────────┘   │   │
-│   │  ┌──────────────────────────────────────────────────────────┐   │   │
-│   │  │ 219 Cabot St, Boston, MA 02120                            │   │   │
-│   │  └──────────────────────────────────────────────────────────┘   │   │
-│   │                                                                 │   │
-│   │  Date & Time *                                                  │   │
-│   │  ┌─────────────────────┐  ┌──────────────────┐                 │   │
-│   │  │ Feb 16, 2025       ▼│  │ 2:00 PM         ▼│                 │   │
-│   │  └─────────────────────┘  └──────────────────┘                 │   │
-│   │                                                                 │   │
-│   │  Players                  Skill Level                          │   │
-│   │  Min: [4 ▼]  Max: [10▼]   [Intermediate           ▼]           │   │
-│   │                                                                 │   │
-│   │  Description (optional)                                         │   │
-│   │  ┌──────────────────────────────────────────────────────────┐   │   │
-│   │  │ Bring both light and dark shirts for teams.               │   │   │
-│   │  │ We'll play 5v5 full court.                                │   │   │
-│   │  │                                                            │   │   │
-│   │  └──────────────────────────────────────────────────────────┘   │   │
-│   │                                                                 │   │
-│   │            [ Cancel ]              [ Create Game ]              │   │
-│   │                                                                 │   │
-│   └─────────────────────────────────────────────────────────────────┘   │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│  🏀 PickupPro         🎮 Games  👥 Players  📋 My Games    👤 Demo  │
+├─────────────────────────────────────────────────────────────────────┤
+│  ← Back to Games                                                    │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │ [🏸 Badminton]                                        🏸    │    │
+│  │ Sunday Badminton Doubles                                     │    │
+│  │ 🟢 Upcoming                                                  │    │
+│  ├─────────────────────────────────────────────────────────────┤    │
+│  │  📍 Cabot Center   📅 Feb 21    👥 0/10      🎯 All Levels  │    │
+│  │     Boston, MA        10:00 PM     10 spots left             │    │
+│  ├─────────────────────────────────────────────────────────────┤    │
+│  │  🎖️ Host                                                     │    │
+│  │  ┌──────────────────────────────────────────────────────┐   │    │
+│  │  │ 👤  Demo User   ⭐ 0.0 (0 reviews)        View →    │   │    │
+│  │  └──────────────────────────────────────────────────────┘   │    │
+│  ├─────────────────────────────────────────────────────────────┤    │
+│  │  👥 Players (0/10)                                          │    │
+│  │  ┌──────────────────────────────────────────────────────┐   │    │
+│  │  │           No players yet. Be the first!              │   │    │
+│  │  └──────────────────────────────────────────────────────┘   │    │
+│  ├─────────────────────────────────────────────────────────────┤    │
+│  │  [✏️ Edit]  [✅ Complete]  [❌ Cancel]  [🎮 Join Game]      │    │
+│  └─────────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-### User Profile
+### Mockup 3 — Player Profile (`/users/:id`) — with Upcoming Fixtures
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│  🏀 PickupPro                    [Browse] [My Games] [Profile] [Logout] │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   ┌───────────────────────────────────────────────────────────────────┐ │
-│   │                                                                   │ │
-│   │  ┌─────┐   JOY CHEN                          ⭐ 4.8 (52 ratings)  │ │
-│   │  │     │   ───────────────────────────────────────────────────── │ │
-│   │  │ 👤  │   Marketing Manager | Cambridge, MA                     │ │
-│   │  │     │   Member since January 2024                             │ │
-│   │  └─────┘                                                         │ │
-│   │                                                                   │ │
-│   │  "I organize weekly soccer games - always looking for            │ │
-│   │   reliable players who show up on time and play fair!"           │ │
-│   │                                                                   │ │
-│   │  ┌──────────────────────────────────────────────────────────────┐│ │
-│   │  │ SPORTS & SKILL LEVELS                                        ││ │
-│   │  │                                                              ││ │
-│   │  │  ⚽ Soccer ████████████████░░░░ Advanced                     ││ │
-│   │  │  🏀 Basketball █████████░░░░░░░ Intermediate                 ││ │
-│   │  │  🎾 Tennis ██████░░░░░░░░░░░░░░ Beginner                     ││ │
-│   │  └──────────────────────────────────────────────────────────────┘│ │
-│   │                                                                   │ │
-│   └───────────────────────────────────────────────────────────────────┘ │
-│                                                                         │
-│   ┌──────────────────────────────┐ ┌──────────────────────────────────┐ │
-│   │ GAMES HOSTED: 24             │ │ GAMES PLAYED: 47                 │ │
-│   └──────────────────────────────┘ └──────────────────────────────────┘ │
-│                                                                         │
-│   RECENT RATINGS                                                        │
-│   ─────────────────────────────────────────────────────────────────     │
-│   ┌───────────────────────────────────────────────────────────────────┐ │
-│   │ ⭐⭐⭐⭐⭐  "Best organizer! Games always start on time."         │ │
-│   │ - Mohit S. | Feb 10, 2025 | Sunday Soccer                        │ │
-│   ├───────────────────────────────────────────────────────────────────┤ │
-│   │ ⭐⭐⭐⭐⭐  "Great sportsmanship and really welcoming to newbies" │ │
-│   │ - Emma R. | Feb 3, 2025 | Sunday Soccer                          │ │
-│   ├───────────────────────────────────────────────────────────────────┤ │
-│   │ ⭐⭐⭐⭐☆  "Good player, competitive but fair"                    │ │
-│   │ - Alex K. | Jan 27, 2025 | Basketball Pickup                     │ │
-│   └───────────────────────────────────────────────────────────────────┘ │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│  🏀 PickupPro         🎮 Games  👥 Players  📋 My Games    👤 Demo  │
+├─────────────────────────────────────────────────────────────────────┤
+│  ← Back                                                             │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │              [ 👤 ]                                    🏆   │    │
+│  │             Joy Chen                                         │    │
+│  │          ⭐ 4.8  (52 reviews)                                │    │
+│  ├───────────┬──────────┬────────────┬────────────────────────┤    │
+│  │   4.8     │   52     │    24      │    47                   │    │
+│  │ ⭐ RATING │ REVIEWS  │  HOSTED    │   PLAYED                │    │
+│  ├───────────┴──────────┴────────────┴────────────────────────┤    │
+│  │  📝 About                                                    │    │
+│  │  "Love playing soccer! Organizing weekly games for 3 years" │    │
+│  ├─────────────────────────────────────────────────────────────┤    │
+│  │  🏆 Sports:  [⚽ Soccer]  [🏀 Basketball]  [🎾 Tennis]       │    │
+│  ├─────────────────────────────────────────────────────────────┤    │
+│  │  📅 Upcoming Fixtures                          3 games      │    │
+│  │  ┌──────────────────────────────────────────────────────┐   │    │
+│  │  │ ⚽  Weekly Soccer · Sun Feb 23 · 10AM · Cambridge HOST│   │    │
+│  │  │ 🏀  Sunday Hoops · Mon Feb 24 · 2PM · Boston   PLAYER│   │    │
+│  │  │ 🎾  Tennis Doubles · Wed Feb 26 · 6PM · Boston PLAYER│   │    │
+│  │  └──────────────────────────────────────────────────────┘   │    │
+│  ├─────────────────────────────────────────────────────────────┤    │
+│  │  ⭐ Reviews                                                  │    │
+│  │  "Best organizer! Always on time." — Mohit  ⭐⭐⭐⭐⭐        │    │
+│  │  "Very welcoming to newcomers." — Emma      ⭐⭐⭐⭐⭐        │    │
+│  └─────────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-### Rate Players Modal
+### Mockup 4 — My Games → Past Games with Inline Rating (`/my-games`)
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                                                                         │
-│   ┌───────────────────────────────────────────────────────────────────┐ │
-│   │                                                               [X] │ │
-│   │                    RATE PLAYERS                                   │ │
-│   │                    Sunday Soccer - Feb 10, 2025                   │ │
-│   │                                                                   │ │
-│   │   ┌─────────────────────────────────────────────────────────────┐ │ │
-│   │   │  👤 Mohit Sharma                                            │ │ │
-│   │   │                                                             │ │ │
-│   │   │  Sportsmanship: [☆] [☆] [☆] [☆] [☆]                        │ │ │
-│   │   │                  1   2   3   4   5                          │ │ │
-│   │   │                                                             │ │ │
-│   │   │  Comment (optional):                                        │ │ │
-│   │   │  ┌───────────────────────────────────────────────────────┐  │ │ │
-│   │   │  │ Great attitude, showed up early to help set up!       │  │ │ │
-│   │   │  └───────────────────────────────────────────────────────┘  │ │ │
-│   │   │                                                             │ │ │
-│   │   │                              [Submit Rating]                │ │ │
-│   │   └─────────────────────────────────────────────────────────────┘ │ │
-│   │                                                                   │ │
-│   │   ┌─────────────────────────────────────────────────────────────┐ │ │
-│   │   │  👤 Emma Rodriguez                           ✓ Already Rated │ │ │
-│   │   └─────────────────────────────────────────────────────────────┘ │ │
-│   │                                                                   │ │
-│   │   ┌─────────────────────────────────────────────────────────────┐ │ │
-│   │   │  👤 Alex Kim                                                │ │ │
-│   │   │                                                             │ │ │
-│   │   │  Sportsmanship: [☆] [☆] [☆] [☆] [☆]                        │ │ │
-│   │   │                                                             │ │ │
-│   │   │                              [Submit Rating]                │ │ │
-│   │   └─────────────────────────────────────────────────────────────┘ │ │
-│   │                                                                   │ │
-│   │                                            [Done]                 │ │
-│   └───────────────────────────────────────────────────────────────────┘ │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│  🏀 PickupPro         🎮 Games  👥 Players  📋 My Games    👤 Demo  │
+├─────────────────────────────────────────────────────────────────────┤
+│  🎮 My Games                                                        │
+│  [All]  [Hosting]  [Playing]  [📜 Past Games ◀ active]             │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │ ⚽  Weekly Soccer Pickup             Feb 16, 2025           │    │
+│  │     📍 Cambridge  ·  👥 10/12                               │    │
+│  ├─────────────────────────────────────────────────────────────┤    │
+│  │  ⭐ Rate Players                                             │    │
+│  │  👤 Mohit Sharma      [★][★][★][★][☆]       [Rate]         │    │
+│  │  👤 Emma Rodriguez    [☆][☆][☆][☆][☆]       [Rate]         │    │
+│  └─────────────────────────────────────────────────────────────┘    │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │ 🏀  Sunday Hoops                     Feb 9, 2025            │    │
+│  │     📍 Boston  ·  👥 8/10                                   │    │
+│  ├─────────────────────────────────────────────────────────────┤    │
+│  │  ✅ All players rated                                        │    │
+│  └─────────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-### Mobile-Responsive Game Card
+### Mockup 5 — Find Players with Instant Search (`/players`)
 
 ```
-┌──────────────────────────────┐
-│  🏀 Sunday Basketball        │
-│  ─────────────────────────── │
-│                              │
-│  📍 Cabot Center             │
-│     Boston, MA               │
-│                              │
-│  📅 Feb 16, 2025             │
-│  🕐 2:00 PM                  │
-│                              │
-│  ┌────────────────────────┐  │
-│  │ ████████░░  8/10       │  │
-│  │ spots filled           │  │
-│  └────────────────────────┘  │
-│                              │
-│  ⭐ Host: Joy Chen (4.8)     │
-│  🎯 Intermediate             │
-│                              │
-│  ┌────────────────────────┐  │
-│  │      JOIN GAME         │  │
-│  └────────────────────────┘  │
-│                              │
-└──────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│  🏀 PickupPro         🎮 Games  👥 Players  📋 My Games    👤 Demo  │
+├─────────────────────────────────────────────────────────────────────┤
+│  👥 Find Players  —  Discover the community                         │
+│                                                                     │
+│  ┌──────────────────────────────────────┐ ┌─────────────────────┐   │
+│  │  SEARCH                              │ │  SPORT              │   │
+│  │  [Search by name...                ] │ │  [All Sports      ▾]│   │
+│  └──────────────────────────────────────┘ └─────────────────────┘   │
+│  Showing 3 of 101 players matching "Joy"                            │
+│                                                                     │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐             │
+│  │   [ 👤 ]     │  │   [ 👤 ]     │  │   [ 👤 ]     │             │
+│  │  Joy Chen    │  │ Joylynn Patel│  │Joydeep Kumar │             │
+│  │ ⭐ 4.8 (52) │  │ ⭐ 4.1 (18)  │  │ ⭐ 3.9  (7) │             │
+│  │  ⚽ 🏀 🎾   │  │    🏏 🏐     │  │     🏃       │             │
+│  └──────────────┘  └──────────────┘  └──────────────┘             │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Color Palette & Typography
+### Mockup 6 — Register / Create Account (`/register`)
 
-### Primary Colors
-- **Primary**: `#FF6B35` (Energetic Orange)
-- **Secondary**: `#004E64` (Deep Teal)
-- **Accent**: `#25A18E` (Fresh Green)
-- **Background**: `#F7F9FC` (Light Gray)
-- **Text**: `#1A1A2E` (Dark Navy)
-
-### Typography
-- **Headings**: 'Montserrat', sans-serif (Bold)
-- **Body**: 'Open Sans', sans-serif (Regular)
-- **Accents**: 'Poppins', sans-serif (Medium)
-
-### Sport Color Coding
-| Sport | Color | Emoji |
-|-------|-------|-------|
-| Basketball | `#FF6B35` | 🏀 |
-| Soccer | `#25A18E` | ⚽ |
-| Tennis | `#F0C808` | 🎾 |
-| Volleyball | `#7B2CBF` | 🏐 |
-| Baseball | `#E63946` | ⚾ |
-| Cricket | `#2A9D8F` | 🏏 |
-| Badminton | `#4361EE` | 🏸 |
-| Running | `#FF9F1C` | 🏃 |
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  🏀 PickupPro                                  [Log In]  [Sign Up]  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│              ┌──────────────────────────────────────┐              │
+│              │  🎉  Join PickupPro!             ⚽   │              │
+│              ├──────────────────────────────────────┤              │
+│              │  👤 Name                             │              │
+│              │  [Your name                        ] │              │
+│              │  📧 Email                            │              │
+│              │  [you@example.com                  ] │              │
+│              │  🔐 Password  (min 6 chars)          │              │
+│              │  [••••••••••                        ] │              │
+│              │                                      │              │
+│              │  🏆 Favorite Sports                  │              │
+│              │  ┌──────────┬──────────┬──────────┐  │              │
+│              │  │🏀 ✅     │ ⚽       │ 🎾       │  │              │
+│              │  │Basketball│ Soccer   │ Tennis   │  │              │
+│              │  ├──────────┼──────────┼──────────┤  │              │
+│              │  │🏐        │ 🏏 ✅    │ 🏸       │  │              │
+│              │  │Volleyball│ Cricket  │Badminton │  │              │
+│              │  └──────────┴──────────┴──────────┘  │              │
+│              │                                      │              │
+│              │  [    ✨ Create Account           ]  │              │
+│              │  Have an account?  Log in 🚀         │              │
+│              └──────────────────────────────────────┘              │
+└─────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-*Document Version 1.0 | Created for CS5610 Web Development | Northeastern University*
+### Mockup 7 — Create a Game (`/games/create`)
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  🏀 PickupPro         🎮 Games  👥 Players  📋 My Games    👤 Demo  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│           ┌────────────────────────────────────────────┐           │
+│           │  🎮  Create a Game                         │           │
+│           │      Set up a game for others to join!     │           │
+│           ├────────────────────────────────────────────┤           │
+│           │  🏆 Sport                                  │           │
+│           │  ┌────────┬────────┬────────┬────────┐     │           │
+│           │  │🏀      │⚽ ✅   │🎾      │🏐      │     │           │
+│           │  │Basketbl│Soccer  │Tennis  │Volleybl│     │           │
+│           │  ├────────┼────────┼────────┼────────┤     │           │
+│           │  │🏏      │🏸      │🏃      │🎯      │     │           │
+│           │  │Cricket │Badmntn │Running │Other   │     │           │
+│           │  └────────┴────────┴────────┴────────┘     │           │
+│           │  ✏️ Title                                   │           │
+│           │  [Sunday Soccer at Magazine Beach        ]  │           │
+│           │  📍 Location           🏙️ City              │           │
+│           │  [Magazine Beach     ] [Cambridge       ]   │           │
+│           │  📅 Date & Time                             │           │
+│           │  [02/23/2025  10:00                     ]   │           │
+│           │  👥 Min  👥 Max   🎯 Skill Level            │           │
+│           │  [ 6  ]  [ 12 ]   [All Levels          ▾]   │           │
+│           │  📝 Description (optional)                  │           │
+│           │  [All welcome! Bring water + shirts.    ]   │           │
+│           │  [  Cancel  ]      [    🎮 Create!    ]     │           │
+│           └────────────────────────────────────────────┘           │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 5. System Architecture
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    CLIENT — Vanilla JS SPA                   │
+│  Custom Router · ES Modules · Fetch API · JWT localStorage   │
+│  games.js · users.js · ratings.js · auth.js · components.js │
+└──────────────────────────┬───────────────────────────────────┘
+                           │  REST API / JSON over HTTP
+┌──────────────────────────▼───────────────────────────────────┐
+│                  SERVER — Node.js + Express                   │
+│  /api/auth · /api/games · /api/users · /api/ratings          │
+│  JWT Middleware · Error Handler · CORS · Static Serving      │
+└──────────────────────────┬───────────────────────────────────┘
+                           │  MongoDB Native Driver (no Mongoose)
+┌──────────────────────────▼───────────────────────────────────┐
+│                  DATABASE — MongoDB                           │
+│  users collection · games collection · ratings collection    │
+│  100+ users · 1,100+ games · thousands of ratings (seeded)   │
+└──────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 6. Database Design
+
+### Users Collection
+
+| Field         | Type     | Notes                             |
+| ------------- | -------- | --------------------------------- |
+| `_id`         | ObjectId | Primary key                       |
+| `email`       | String   | Unique, required                  |
+| `password`    | String   | bcrypt hashed                     |
+| `name`        | String   | Display name                      |
+| `bio`         | String   | Optional                          |
+| `sports`      | [String] | e.g. `["Basketball", "Cricket"]`  |
+| `skillLevels` | Object   | e.g. `{"Basketball": "Advanced"}` |
+| `createdAt`   | Date     |                                   |
+
+### Games Collection
+
+| Field        | Type       | Notes                                           |
+| ------------ | ---------- | ----------------------------------------------- |
+| `_id`        | ObjectId   | Primary key                                     |
+| `hostId`     | ObjectId   | → users                                         |
+| `sport`      | String     | One of 9 supported sports                       |
+| `title`      | String     |                                                 |
+| `location`   | Object     | name, city, address, coordinates                |
+| `date`       | Date       |                                                 |
+| `maxPlayers` | Number     |                                                 |
+| `minPlayers` | Number     |                                                 |
+| `players`    | [ObjectId] | → users                                         |
+| `waitlist`   | [ObjectId] | Ordered → users                                 |
+| `status`     | String     | `upcoming` / `completed` / `cancelled`          |
+| `skillLevel` | String     | Beginner / Intermediate / Advanced / All Levels |
+
+### Ratings Collection
+
+| Field        | Type     | Notes                   |
+| ------------ | -------- | ----------------------- |
+| `_id`        | ObjectId | Primary key             |
+| `gameId`     | ObjectId | → games                 |
+| `fromUserId` | ObjectId | → users                 |
+| `toUserId`   | ObjectId | → users                 |
+| `score`      | Number   | 1–5 stars               |
+| `comment`    | String   | Optional, max 500 chars |
+| `createdAt`  | Date     |                         |
+
+> Unique compound index on `gameId + fromUserId + toUserId` — one rating per pair per game.
+
+---
+
+## 7. API Endpoints
+
+### Authentication
+
+| Method | Endpoint             | Auth   | Description                    |
+| ------ | -------------------- | ------ | ------------------------------ |
+| POST   | `/api/auth/register` | —      | Register new user, returns JWT |
+| POST   | `/api/auth/login`    | —      | Login, returns JWT + user      |
+| GET    | `/api/auth/me`       | ✅ JWT | Get current user + stats       |
+
+### Games _(Kashish Rahulbhai Khatri)_
+
+| Method | Endpoint                  | Auth     | Description                                  |
+| ------ | ------------------------- | -------- | -------------------------------------------- |
+| GET    | `/api/games`              | Optional | List with filters: sport, status, city, date |
+| GET    | `/api/games/:id`          | Optional | Game detail with host, players, waitlist     |
+| POST   | `/api/games`              | ✅ JWT   | Create new game                              |
+| PUT    | `/api/games/:id`          | ✅ Host  | Edit game details                            |
+| DELETE | `/api/games/:id`          | ✅ Host  | Cancel game                                  |
+| POST   | `/api/games/:id/join`     | ✅ JWT   | Join game or waitlist                        |
+| POST   | `/api/games/:id/leave`    | ✅ JWT   | Leave game or waitlist                       |
+| PUT    | `/api/games/:id/complete` | ✅ Host  | Mark as completed                            |
+| GET    | `/api/games/:id/roster`   | Optional | Get full roster and waitlist                 |
+
+### Users _(Abhimanyu Dudeja)_
+
+| Method | Endpoint                 | Auth     | Description                          |
+| ------ | ------------------------ | -------- | ------------------------------------ |
+| GET    | `/api/users`             | Optional | Search/list users by name, sport     |
+| GET    | `/api/users/:id`         | Optional | User profile with stats and ratings  |
+| PUT    | `/api/users/:id`         | ✅ Own   | Update name, bio, sports             |
+| GET    | `/api/users/:id/games`   | Optional | Game history filtered by status/role |
+| GET    | `/api/users/:id/ratings` | Optional | Ratings received by user             |
+
+### Ratings _(Abhimanyu Dudeja)_
+
+| Method | Endpoint                    | Auth   | Description                                  |
+| ------ | --------------------------- | ------ | -------------------------------------------- |
+| POST   | `/api/ratings`              | ✅ JWT | Rate a player (1–5 stars + optional comment) |
+| GET    | `/api/ratings/game/:gameId` | —      | All ratings for a game                       |
+| GET    | `/api/ratings/pending`      | ✅ JWT | Completed games where user can still rate    |
+
+---
+
+_PickupPro Design Document · CS5610 Web Development · Northeastern University · Spring 2026_
+_Authors: Kashish Rahulbhai Khatri & Abhimanyu Dudeja_

@@ -1,5 +1,6 @@
 /**
  * PAGE: users  (/players  /users/:id  /profile  /my-games)
+ * Created by: Abhimanyu Dudeja
  */
 import { Users } from "../modules/api.js";
 import { SPORTS, getSport, escape, $, $$ } from "../modules/utils.js";
@@ -36,10 +37,10 @@ export function registerUserRoutes() {
 
       let filtered = allPlayers;
       if (name) {
-        filtered = filtered.filter(u => u.name.toLowerCase().includes(name));
+        filtered = filtered.filter((u) => u.name.toLowerCase().includes(name));
       }
       if (sport) {
-        filtered = filtered.filter(u => u.sports && u.sports.includes(sport));
+        filtered = filtered.filter((u) => u.sports && u.sports.includes(sport));
       }
 
       // Show results info when filtering
@@ -75,20 +76,33 @@ export function registerUserRoutes() {
     // Fetch user profile and upcoming fixtures in parallel
     const [r, fixturesRes] = await Promise.all([
       Users.get(id),
-      Users.games(id, { status: "upcoming", limit: 10, sortBy: "date", sortOrder: "asc" }).catch(() => ({ data: { games: [] } }))
+      Users.games(id, {
+        status: "upcoming",
+        limit: 10,
+        sortBy: "date",
+        sortOrder: "asc",
+      }).catch(() => ({ data: { games: [] } })),
     ]);
     const { user, stats, recentRatings } = r.data;
     const fixtures = fixturesRes.data.games || [];
     const isOwnProfile = currentUser && currentUser._id === id;
 
     const fixturesHtml = fixtures.length
-      ? fixtures.map(g => {
-          const s = getSport(g.sport);
-          const date = new Date(g.date);
-          const dateStr = date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
-          const timeStr = date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
-          const isHost = g.role === "host";
-          return `<a href="/games/${g._id}" data-link style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4);background:var(--gray-50);border-radius:var(--radius-xl);text-decoration:none;color:inherit;border:2px solid transparent;transition:var(--transition);margin-bottom:var(--space-3)" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='transparent'">
+      ? fixtures
+          .map((g) => {
+            const s = getSport(g.sport);
+            const date = new Date(g.date);
+            const dateStr = date.toLocaleDateString("en-US", {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+            });
+            const timeStr = date.toLocaleTimeString("en-US", {
+              hour: "numeric",
+              minute: "2-digit",
+            });
+            const isHost = g.role === "host";
+            return `<a href="/games/${g._id}" data-link style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4);background:var(--gray-50);border-radius:var(--radius-xl);text-decoration:none;color:inherit;border:2px solid transparent;transition:var(--transition);margin-bottom:var(--space-3)" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='transparent'">
             <div style="width:48px;height:48px;background:var(--primary-gradient);border-radius:var(--radius-xl);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">${s.emoji}</div>
             <div style="flex:1;min-width:0">
               <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escape(g.title)}</div>
@@ -99,7 +113,8 @@ export function registerUserRoutes() {
               <span style="font-size:0.78rem;color:var(--gray-500)">👥 ${g.playerCount}/${g.maxPlayers}</span>
             </div>
           </a>`;
-        }).join("")
+          })
+          .join("")
       : `<div style="padding:var(--space-5);background:var(--gray-50);border-radius:var(--radius-xl);text-align:center"><p style="color:var(--gray-500);margin:0">No upcoming fixtures</p></div>`;
 
     render(`
@@ -121,7 +136,7 @@ export function registerUserRoutes() {
               <div style="text-align:center;padding:var(--space-4);background:var(--volleyball-gradient);border-radius:var(--radius-xl);color:white"><div style="font-size:1.8rem;font-weight:700">${stats.gamesHosted}</div><div style="font-size:0.7rem;opacity:0.9">HOSTED</div></div>
               <div style="text-align:center;padding:var(--space-4);background:var(--badminton-gradient);border-radius:var(--radius-xl);color:white"><div style="font-size:1.8rem;font-weight:700">${stats.gamesPlayed}</div><div style="font-size:0.7rem;opacity:0.9">PLAYED</div></div>
             </div>
-            ${user.bio ? `<div style="padding:var(--space-4);background:var(--gray-50);border-radius:var(--radius-xl);margin-bottom:var(--space-6)"><h4 style="font-size:0.9rem;color:var(--gray-500);margin-bottom:var(--space-2)">📝 About</h4><p style="color:var(--gray-700);margin:0">${escape(user.bio)}</p></div>` : ""}
+            ${user.bio ? `<div style="padding:var(--space-4);background:var(--gray-50);border-radius:var(--radius-xl);margin-bottom:var(--space-6)"><h4 style="font-size:0.9rem;color:var(--gray-500);margin-bottom:var(--space-2)">About</h4><p style="color:var(--gray-700);margin:0">${escape(user.bio)}</p></div>` : ""}
             <div style="margin-bottom:var(--space-6)">
               <h4 style="font-size:1rem;margin-bottom:var(--space-3)">🏆 Sports</h4>
               ${user.sports && user.sports.length > 0 ? `<div style="display:flex;flex-wrap:wrap;gap:var(--space-3)">${user.sports.map((s) => `<div style="display:flex;align-items:center;gap:var(--space-2);padding:var(--space-3) var(--space-4);background:var(--gray-100);border-radius:var(--radius-full)"><span style="font-size:1.3rem">${getSport(s).emoji}</span><span style="font-weight:600">${getSport(s).name}</span></div>`).join("")}</div>` : '<p style="color:var(--gray-500)">No sports yet</p>'}
@@ -129,14 +144,14 @@ export function registerUserRoutes() {
 
             <div style="margin-bottom:var(--space-6);padding-top:var(--space-6);border-top:2px dashed var(--gray-200)">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4)">
-                <h4 style="font-size:1rem;margin:0">📅 Upcoming Fixtures</h4>
+                <h4 style="font-size:1rem;margin:0">Upcoming Fixtures</h4>
                 <span style="font-size:0.82rem;color:var(--gray-500);background:var(--gray-100);padding:4px 12px;border-radius:var(--radius-full);font-weight:600">${fixtures.length} game${fixtures.length !== 1 ? "s" : ""}</span>
               </div>
               ${fixturesHtml}
             </div>
 
             ${recentRatings && recentRatings.length > 0 ? `<div style="padding-top:var(--space-6);border-top:2px dashed var(--gray-200)"><h4 style="font-size:1rem;margin-bottom:var(--space-4)">⭐ Reviews</h4><div style="display:flex;flex-direction:column;gap:var(--space-3)">${recentRatings.map((rt) => `<div style="padding:var(--space-4);background:var(--gray-50);border-radius:var(--radius-xl)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-2)"><a href="/users/${rt.fromUser?._id}" data-link style="display:flex;align-items:center;gap:var(--space-2);text-decoration:none;color:inherit"><div style="width:36px;height:36px;background:var(--primary-gradient);border-radius:50%;display:flex;align-items:center;justify-content:center">👤</div><strong>${escape(rt.fromUser?.name || "Anonymous")}</strong></a><div>⭐ ${rt.score}/5</div></div>${rt.comment ? `<p style="color:var(--gray-600);font-size:0.9rem;font-style:italic;margin:0">"${escape(rt.comment)}"</p>` : ""}</div>`).join("")}</div></div>` : `<div style="padding:var(--space-6);background:var(--gray-50);border-radius:var(--radius-xl);text-align:center"><p style="color:var(--gray-500);margin:0">No reviews yet</p></div>`}
-            ${isOwnProfile ? `<a href="/profile" class="btn btn--primary btn--full" data-link style="margin-top:var(--space-6)">✏️ Edit My Profile</a>` : ""}
+            ${isOwnProfile ? `<a href="/profile" class="btn btn--primary btn--full" data-link style="margin-top:var(--space-6)">Edit My Profile</a>` : ""}
           </div>
         </div>
       </div></section>`);
@@ -167,12 +182,12 @@ export function registerUserRoutes() {
             </div>
             <form id="profileForm">
               <div class="form-group"><label class="form-label">👤 Name</label><input type="text" name="name" class="form-input" value="${escape(user.name)}" required minlength="2"></div>
-              <div class="form-group"><label class="form-label">📝 Bio</label><textarea name="bio" class="form-textarea" placeholder="Tell players about yourself...">${escape(user.bio || "")}</textarea></div>
+              <div class="form-group"><label class="form-label">Bio</label><textarea name="bio" class="form-textarea" placeholder="Tell players about yourself...">${escape(user.bio || "")}</textarea></div>
               <div class="form-group"><label class="form-label">🏆 My Sports</label>${SportSelector("checkbox", user.sports || [])}</div>
-              <button type="submit" class="btn btn--primary btn--full btn--lg" style="margin-top:var(--space-4)">💾 Save Changes</button>
+              <button type="submit" class="btn btn--primary btn--full btn--lg" style="margin-top:var(--space-4)">Save Changes</button>
             </form>
             <div style="margin-top:var(--space-6);display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)">
-              <a href="/my-games" class="btn btn--outline" data-link>🎮 My Games</a>
+              <a href="/my-games" class="btn btn--outline" data-link>My Games</a>
               <a href="/ratings/pending" class="btn btn--outline" data-link>⭐ Rate Players</a>
             </div>
           </div>
@@ -193,7 +208,7 @@ export function registerUserRoutes() {
           });
           currentUser.name = fd.get("name");
           updateAuthUI();
-          toast("success", "Saved! ✅");
+          toast("success", "Saved!");
         } catch (err) {
           toast("error", err.message);
         } finally {
@@ -201,7 +216,7 @@ export function registerUserRoutes() {
           btn.classList.remove("btn--loading");
         }
       };
-    })
+    }),
   );
 
   route(
@@ -209,7 +224,7 @@ export function registerUserRoutes() {
     requireAuth(async () => {
       render(`
       <section class="section"><div class="container">
-        <div class="page-header"><h2>🎮 My Games</h2></div>
+        <div class="page-header"><h2>My Games</h2></div>
         <div class="filters" id="filters">
           <button class="filter-btn active" data-f="all">All</button>
           <button class="filter-btn" data-f="host">Hosting</button>
@@ -222,42 +237,59 @@ export function registerUserRoutes() {
 
       async function loadPastGames() {
         const list = $("#gamesList");
-        list.innerHTML = '<div class="loader" style="grid-column:1/-1"><div class="loader__ball">🏀</div></div>';
+        list.innerHTML =
+          '<div class="loader" style="grid-column:1/-1"><div class="loader__ball">🏀</div></div>';
         try {
           const token = localStorage.getItem("token");
           const [gamesRes, pendingRes] = await Promise.all([
             Users.games(currentUser._id, { status: "completed", limit: 50 }),
-            fetch("/api/ratings/pending", { headers: { Authorization: "Bearer " + token } }).then(r => r.json())
+            fetch("/api/ratings/pending", {
+              headers: { Authorization: "Bearer " + token },
+            }).then((r) => r.json()),
           ]);
           const games = gamesRes.data.games;
           const pendingMap = {};
-          (pendingRes.data?.pendingRatings || []).forEach(pr => { pendingMap[pr.game._id] = pr.unratedPlayers; });
+          (pendingRes.data?.pendingRatings || []).forEach((pr) => {
+            pendingMap[pr.game._id] = pr.unratedPlayers;
+          });
 
           if (!games.length) {
-            list.innerHTML = '<div class="empty-state"><div class="empty-state__icon">📜</div><h3>No past games</h3><p>Completed games will appear here</p></div>';
+            list.innerHTML =
+              '<div class="empty-state"><div class="empty-state__icon">📜</div><h3>No past games</h3><p>Completed games will appear here</p></div>';
             return;
           }
 
-          const cards = games.map(g => {
+          const cards = games.map((g) => {
             const sport = g.sport || "Other";
             const sportObj = getSport(sport);
             const unrated = pendingMap[g._id] || [];
-            const dateStr = new Date(g.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+            const dateStr = new Date(g.date).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            });
 
             let ratingSection = "";
             if (unrated.length) {
-              const playerRows = unrated.map(p => {
-                const stars = [1,2,3,4,5].map(n => `<span class="star" data-v="${n}" style="cursor:pointer;color:var(--gray-300);font-size:1.3rem">★</span>`).join("");
-                return `<div class="rate-box" data-player="${p._id}" data-game="${g._id}" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);background:var(--gray-50);border-radius:var(--radius-xl);margin-bottom:var(--space-2)">
+              const playerRows = unrated
+                .map((p) => {
+                  const stars = [1, 2, 3, 4, 5]
+                    .map(
+                      (n) =>
+                        `<span class="star" data-v="${n}" style="cursor:pointer;color:var(--gray-300);font-size:1.3rem">★</span>`,
+                    )
+                    .join("");
+                  return `<div class="rate-box" data-player="${p._id}" data-game="${g._id}" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);background:var(--gray-50);border-radius:var(--radius-xl);margin-bottom:var(--space-2)">
                   <div style="width:36px;height:36px;background:var(--primary-gradient);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">👤</div>
                   <strong style="flex:1">${escape(p.name)}</strong>
                   <div class="stars" style="display:flex;gap:2px">${stars}</div>
                   <button class="btn btn--primary submit-rating" style="padding:var(--space-2) var(--space-4);font-size:0.85rem">Rate</button>
                 </div>`;
-              }).join("");
+                })
+                .join("");
               ratingSection = `<div style="margin-top:var(--space-4)"><h4 style="font-size:0.95rem;margin-bottom:var(--space-3);color:var(--gray-600)">⭐ Rate Players</h4>${playerRows}</div>`;
             } else {
-              ratingSection = `<p style="margin-top:var(--space-3);font-size:0.85rem;color:var(--success)">✅ All players rated</p>`;
+              ratingSection = `<p style="margin-top:var(--space-3);font-size:0.85rem;color:var(--success)">All players rated</p>`;
             }
 
             return `<div class="card card--static" style="margin-bottom:var(--space-5)">
@@ -275,32 +307,50 @@ export function registerUserRoutes() {
 
           list.innerHTML = cards.join("");
 
-          $$("#gamesList .star").forEach(s => {
+          $$("#gamesList .star").forEach((s) => {
             s.onclick = () => {
               const v = +s.dataset.v;
               const box = s.closest(".rate-box");
-              box.querySelectorAll(".star").forEach((st, i) => st.style.color = i < v ? "#FFD700" : "var(--gray-300)");
+              box
+                .querySelectorAll(".star")
+                .forEach(
+                  (st, i) =>
+                    (st.style.color = i < v ? "#FFD700" : "var(--gray-300)"),
+                );
               box.dataset.rating = v;
             };
           });
 
-          $$("#gamesList .submit-rating").forEach(btn => {
+          $$("#gamesList .submit-rating").forEach((btn) => {
             btn.onclick = async () => {
               const box = btn.closest(".rate-box");
               const score = +box.dataset.rating;
-              if (!score) { toast("warning", "Select a star rating first"); return; }
+              if (!score) {
+                toast("warning", "Select a star rating first");
+                return;
+              }
               btn.disabled = true;
               try {
                 const res = await fetch("/api/ratings", {
                   method: "POST",
-                  headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("token") },
-                  body: JSON.stringify({ gameId: box.dataset.game, toUserId: box.dataset.player, score })
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + localStorage.getItem("token"),
+                  },
+                  body: JSON.stringify({
+                    gameId: box.dataset.game,
+                    toUserId: box.dataset.player,
+                    score,
+                  }),
                 });
-                if (!res.ok) { const d = await res.json(); throw new Error(d.message || "Failed"); }
+                if (!res.ok) {
+                  const d = await res.json();
+                  throw new Error(d.message || "Failed");
+                }
                 toast("success", "Rated! ⭐");
                 box.style.opacity = "0.5";
                 box.style.pointerEvents = "none";
-                btn.textContent = "✅ Done";
+                btn.textContent = "Done";
               } catch (e) {
                 toast("error", e.message);
                 btn.disabled = false;
@@ -313,30 +363,34 @@ export function registerUserRoutes() {
       }
 
       async function load() {
-        if (f === "past") { loadPastGames(); return; }
+        if (f === "past") {
+          loadPastGames();
+          return;
+        }
         const list = $("#gamesList");
-        list.innerHTML = '<div class="loader" style="grid-column:1/-1"><div class="loader__ball">🏀</div></div>';
+        list.innerHTML =
+          '<div class="loader" style="grid-column:1/-1"><div class="loader__ball">🏀</div></div>';
         try {
           const p = { limit: 50 };
           if (f !== "all") p.role = f;
           const r = await Users.games(currentUser._id, p);
           list.innerHTML = r.data.games.length
             ? `<div class="grid grid--games">${r.data.games.map(GameCard).join("")}</div>`
-            : '<div class="empty-state"><div class="empty-state__icon">🎮</div><h3>No games</h3><a href="/games" class="btn btn--primary" data-link>Browse</a></div>';
+            : '<div class="empty-state"><div class="empty-state__icon">🏅</div><h3>No games</h3><a href="/games" class="btn btn--primary" data-link>Browse</a></div>';
         } catch (e) {
           list.innerHTML = `<p>${e.message}</p>`;
         }
       }
 
-      $$(".filter-btn").forEach(b => {
+      $$(".filter-btn").forEach((b) => {
         b.onclick = () => {
-          $$(".filter-btn").forEach(x => x.classList.remove("active"));
+          $$(".filter-btn").forEach((x) => x.classList.remove("active"));
           b.classList.add("active");
           f = b.dataset.f;
           load();
         };
       });
       load();
-    })
+    }),
   );
 }

@@ -1,5 +1,6 @@
 /**
  * PAGE: games  (/games  /games/create  /games/:id  /games/:id/edit)
+ * Created by: Kashish Rahulbhai Khatri
  */
 import { Games } from "../modules/api.js";
 import {
@@ -24,7 +25,7 @@ export function registerGamesRoutes() {
   route("/games", async () => {
     render(`
       <section class="section"><div class="container">
-        <div class="page-header"><h2>🎮 All Games</h2><p>Find your perfect match</p></div>
+        <div class="page-header"><h2>All Games</h2><p>Find your perfect match</p></div>
         <div class="filters" id="sportFilters">
           <button class="filter-btn active" data-sport="">All</button>
           ${SPORTS.map((s) => `<button class="filter-btn" data-sport="${s.name}">${s.emoji} ${s.name}</button>`).join("")}
@@ -33,7 +34,7 @@ export function registerGamesRoutes() {
           <div class="filter-bar__group"><label>Status</label><select id="filterStatus"><option value="upcoming">Upcoming</option><option value="completed">Completed</option><option value="">All</option></select></div>
           <div class="filter-bar__group"><label>Date</label><input type="date" id="filterDate"></div>
           <div class="filter-bar__group"><label>City</label><input type="text" id="filterCity" placeholder="Any city"></div>
-          <div class="filter-bar__actions"><button class="btn btn--primary" id="searchBtn">🔍 Search</button></div>
+          <div class="filter-bar__actions"><button class="btn btn--primary" id="searchBtn">Search</button></div>
         </div>
         <div class="grid grid--games" id="gamesList"><div class="loader"><div class="loader__ball">🏀</div></div></div>
       </div></section>`);
@@ -47,28 +48,48 @@ export function registerGamesRoutes() {
           sport,
           status: $("#filterStatus").value,
           city: $("#filterCity").value,
-        startDate: $("#filterDate").value ? new Date(new Date($("#filterDate").value).getTime() + 18000000).toISOString() : "", endDate: $("#filterDate").value ? new Date(new Date($("#filterDate").value).getTime() + 18000000 + 86400000 - 1).toISOString() : "",
+          startDate: $("#filterDate").value
+            ? new Date(
+                new Date($("#filterDate").value).getTime() + 18000000,
+              ).toISOString()
+            : "",
+          endDate: $("#filterDate").value
+            ? new Date(
+                new Date($("#filterDate").value).getTime() +
+                  18000000 +
+                  86400000 -
+                  1,
+              ).toISOString()
+            : "",
           limit: 20,
         };
         Object.keys(f).forEach((k) => !f[k] && delete f[k]);
         const r = await Games.list(f);
         list.innerHTML = r.data.games.length
           ? r.data.games.map(GameCard).join("")
-          : '<div class="empty-state" style="grid-column:1/-1"><div class="empty-state__icon">🔍</div><h3>No games found</h3><p>Try different filters</p></div>';
+          : '<div class="empty-state" style="grid-column:1/-1"><div class="empty-state__icon">🏅</div><h3>No games found</h3><p>Try different filters</p></div>';
       } catch (e) {
         list.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><p>${e.message}</p></div>`;
       }
     }
-    if (sport) { $$(".filter-btn").forEach((b) => b.classList.toggle("active", b.dataset.sport === sport)); }
+    if (sport) {
+      $$(".filter-btn").forEach((b) =>
+        b.classList.toggle("active", b.dataset.sport === sport),
+      );
+    }
     $$(".filter-btn").forEach(
       (b) =>
         (b.onclick = () => {
-          if (sport) { $$(".filter-btn").forEach((b) => b.classList.toggle("active", b.dataset.sport === sport)); }
-    $$(".filter-btn").forEach((x) => x.classList.remove("active"));
+          if (sport) {
+            $$(".filter-btn").forEach((b) =>
+              b.classList.toggle("active", b.dataset.sport === sport),
+            );
+          }
+          $$(".filter-btn").forEach((x) => x.classList.remove("active"));
           b.classList.add("active");
           sport = b.dataset.sport;
           load();
-        })
+        }),
     );
     $("#searchBtn").onclick = load;
     load();
@@ -82,7 +103,7 @@ export function registerGamesRoutes() {
       <section class="section"><div class="container" style="max-width:550px">
         <div class="card card--static">
           <div class="card__header card__header--primary" style="padding:var(--space-8);text-align:center">
-            <div style="font-size:3rem;margin-bottom:var(--space-2)">🎮</div>
+            <div style="font-size:3rem;margin-bottom:var(--space-2)">🏅</div>
             <h2 style="color:white;margin:0">Create a Game</h2>
             <p style="color:rgba(255,255,255,0.8);margin-top:var(--space-2)">Set up a game for others to join!</p>
             <div class="card__mascot">🏀</div>
@@ -90,22 +111,22 @@ export function registerGamesRoutes() {
           <div class="card__body">
             <form id="createForm">
               <div class="form-group"><label class="form-label">🏆 Sport</label>${SportSelector("radio")}</div>
-              <div class="form-group"><label class="form-label">✏️ Title</label><input type="text" name="title" class="form-input" placeholder="e.g., Sunday Basketball" required></div>
+              <div class="form-group"><label class="form-label">Title</label><input type="text" name="title" class="form-input" placeholder="e.g., Sunday Basketball" required></div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)">
                 <div class="form-group"><label class="form-label">📍 Location</label><input type="text" name="locationName" class="form-input" placeholder="Cabot Center" required></div>
                 <div class="form-group"><label class="form-label">🏙️ City</label><input type="text" name="locationCity" class="form-input" placeholder="Boston" required></div>
               </div>
               <div class="form-group"><label class="form-label">🗺️ Address (optional)</label><input type="text" name="locationAddress" class="form-input" placeholder="123 Main St"></div>
-              <div class="form-group"><label class="form-label">📅 Date & Time</label><input type="datetime-local" name="date" class="form-input" min="${minDate}" required></div>
+              <div class="form-group"><label class="form-label">Date & Time</label><input type="datetime-local" name="date" class="form-input" min="${minDate}" required></div>
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-4)">
                 <div class="form-group"><label class="form-label">👥 Min</label><input type="number" name="minPlayers" class="form-input" value="4" min="2" style="text-align:center"></div>
                 <div class="form-group"><label class="form-label">👥 Max</label><input type="number" name="maxPlayers" class="form-input" value="10" min="2" style="text-align:center"></div>
                 <div class="form-group"><label class="form-label">🎯 Skill</label><select name="skillLevel" class="form-select"><option>All Levels</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div>
               </div>
-              <div class="form-group"><label class="form-label">📝 Description</label><textarea name="description" class="form-textarea" placeholder="Any details..."></textarea></div>
+              <div class="form-group"><label class="form-label">Description</label><textarea name="description" class="form-textarea" placeholder="Any details..."></textarea></div>
               <div style="display:flex;gap:var(--space-4)">
                 <a href="/games" class="btn btn--outline" style="flex:1" data-link>Cancel</a>
-                <button type="submit" class="btn btn--primary" style="flex:2">🎮 Create!</button>
+                <button type="submit" class="btn btn--primary" style="flex:2">Create!</button>
               </div>
             </form>
           </div>
@@ -133,7 +154,7 @@ export function registerGamesRoutes() {
             skillLevel: fd.get("skillLevel"),
             description: fd.get("description"),
           });
-          toast("success", "Game created! 🎉");
+          toast("success", "Game created!");
           navigate("/games/" + r.data._id);
         } catch (err) {
           toast("error", err.message);
@@ -142,7 +163,7 @@ export function registerGamesRoutes() {
           btn.classList.remove("btn--loading");
         }
       };
-    })
+    }),
   );
 
   route("/games/:id", async ({ id }) => {
@@ -160,7 +181,7 @@ export function registerGamesRoutes() {
             <div style="position:relative;z-index:1">
               <div class="game-card__badge" style="margin-bottom:var(--space-3)"><span>${s.emoji}</span> ${s.name}</div>
               <h1 style="color:white;font-size:1.8rem;margin:0;text-shadow:0 2px 8px rgba(0,0,0,0.2)">${escape(g.title)}</h1>
-              <p style="color:rgba(255,255,255,0.9);margin-top:var(--space-2)">${g.status === "completed" ? "✅ Completed" : g.status === "cancelled" ? "❌ Cancelled" : "🟢 Upcoming"}</p>
+              <p style="color:rgba(255,255,255,0.9);margin-top:var(--space-2)">${g.status === "completed" ? "Completed" : g.status === "cancelled" ? "Cancelled" : "Upcoming"}</p>
             </div>
             <div class="card__mascot" style="font-size:130px">${s.emoji}</div>
           </div>
@@ -188,9 +209,9 @@ export function registerGamesRoutes() {
                   : `<div style="padding:var(--space-6);background:var(--gray-50);border-radius:var(--radius-xl);text-align:center"><p style="color:var(--gray-500);margin:0">No players yet. Be the first!</p></div>`
               }
             </div>
-            ${g.waitlist && g.waitlist.length > 0 ? `<div style="margin-bottom:var(--space-6)"><h3 style="font-size:1.1rem;margin-bottom:var(--space-4)">⏳ Waitlist (${g.waitlistCount})</h3><div style="display:flex;flex-direction:column;gap:var(--space-3)">${g.waitlist.map((p, i) => `<a href="/users/${p._id}" data-link style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4);background:#FEF3C7;border-radius:var(--radius-xl);text-decoration:none;border:2px solid transparent;transition:var(--transition)"><div style="width:24px;height:24px;background:var(--warning);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700">${i + 1}</div><div style="flex:1"><div style="font-weight:600">${escape(p.name)}</div></div></a>`).join("")}</div></div>` : ""}
+            ${g.waitlist && g.waitlist.length > 0 ? `<div style="margin-bottom:var(--space-6)"><h3 style="font-size:1.1rem;margin-bottom:var(--space-4)">Waitlist (${g.waitlistCount})</h3><div style="display:flex;flex-direction:column;gap:var(--space-3)">${g.waitlist.map((p, i) => `<a href="/users/${p._id}" data-link style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4);background:#FEF3C7;border-radius:var(--radius-xl);text-decoration:none;border:2px solid transparent;transition:var(--transition)"><div style="width:24px;height:24px;background:var(--warning);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700">${i + 1}</div><div style="flex:1"><div style="font-weight:600">${escape(p.name)}</div></div></a>`).join("")}</div></div>` : ""}
             <div style="display:flex;flex-wrap:wrap;gap:var(--space-3);padding-top:var(--space-4);border-top:2px dashed var(--gray-200)">
-              ${upcoming ? (isHost ? `<a href="/games/${g._id}/edit" class="btn btn--outline" data-link>✏️ Edit</a><button class="btn btn--success" id="completeBtn">✅ Complete</button><button class="btn btn--danger" id="cancelBtn">❌ Cancel</button>${!g.isPlayer ? `<button class="btn btn--primary" id="joinBtn">🎮 Join Game</button>` : `<button class="btn btn--outline" id="leaveBtn">👋 Leave</button>`}` : g.isPlayer ? `<button class="btn btn--outline" id="leaveBtn">👋 Leave</button>` : g.isWaitlisted ? `<button class="btn btn--outline" id="leaveBtn">Leave Waitlist</button><span style="padding:var(--space-3) var(--space-4);background:#FEF3C7;border-radius:var(--radius-lg);font-weight:600">⏳ #${g.waitlistPosition}</span>` : currentUser ? `<button class="btn btn--primary btn--lg" id="joinBtn">${g.isFull ? "📝 Join Waitlist" : "🎮 Join Game"}</button>` : `<a href="/login" class="btn btn--primary btn--lg" data-link>🔐 Login to Join</a>`) : ""}
+              ${upcoming ? (isHost ? `<a href="/games/${g._id}/edit" class="btn btn--outline" data-link>Edit</a><button class="btn btn--success" id="completeBtn">Complete</button><button class="btn btn--danger" id="cancelBtn">Cancel</button>${!g.isPlayer ? `<button class="btn btn--primary" id="joinBtn">Join Game</button>` : `<button class="btn btn--outline" id="leaveBtn">Leave</button>`}` : g.isPlayer ? `<button class="btn btn--outline" id="leaveBtn">Leave</button>` : g.isWaitlisted ? `<button class="btn btn--outline" id="leaveBtn">Leave Waitlist</button><span style="padding:var(--space-3) var(--space-4);background:#FEF3C7;border-radius:var(--radius-lg);font-weight:600"># ${g.waitlistPosition}</span>` : currentUser ? `<button class="btn btn--primary btn--lg" id="joinBtn">${g.isFull ? "Join Waitlist" : "Join Game"}</button>` : `<a href="/login" class="btn btn--primary btn--lg" data-link>Login to Join</a>`) : ""}
               ${g.status === "completed" && (isHost || g.isPlayer) ? `<a href="/ratings/pending" class="btn btn--primary" data-link>⭐ Rate Players</a>` : ""}
             </div>
           </div>
@@ -206,7 +227,7 @@ export function registerGamesRoutes() {
         joinBtn.classList.add("btn--loading");
         try {
           const res = await Games.join(g._id);
-          toast("success", res.message || "Joined! 🎉");
+          toast("success", res.message || "Joined!");
           navigate("/games/" + g._id);
         } catch (e) {
           toast("error", e.message);
@@ -231,7 +252,7 @@ export function registerGamesRoutes() {
         if (!confirm("Mark complete?")) return;
         try {
           await Games.complete(g._id);
-          toast("success", "Done! ⭐");
+          toast("success", "Done!");
           navigate("/games/" + g._id);
         } catch (e) {
           toast("error", e.message);
@@ -266,28 +287,28 @@ export function registerGamesRoutes() {
       <section class="section"><div class="container" style="max-width:550px">
         <div class="card card--static">
           <div class="card__header card__header--${g.sport.toLowerCase()}" style="padding:var(--space-6);text-align:center">
-            <h2 style="color:white;margin:0">✏️ Edit Game</h2>
+            <h2 style="color:white;margin:0">Edit Game</h2>
             <div class="card__mascot" style="font-size:80px">${getSport(g.sport).emoji}</div>
           </div>
           <div class="card__body">
             <form id="editForm">
               <div class="form-group"><label class="form-label">🏆 Sport</label><div class="sport-grid">${SPORTS.map((s) => `<label class="sport-item ${s.name === g.sport ? "active" : ""}"><input type="radio" name="sport" value="${s.name}" ${s.name === g.sport ? "checked" : ""} required><span class="sport-item__emoji">${s.emoji}</span><span class="sport-item__name">${s.name}</span></label>`).join("")}</div></div>
-              <div class="form-group"><label class="form-label">✏️ Title</label><input type="text" name="title" class="form-input" value="${escape(g.title)}" required></div>
+              <div class="form-group"><label class="form-label">Title</label><input type="text" name="title" class="form-input" value="${escape(g.title)}" required></div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)">
                 <div class="form-group"><label class="form-label">📍 Location</label><input type="text" name="locationName" class="form-input" value="${escape(g.location.name)}" required></div>
                 <div class="form-group"><label class="form-label">🏙️ City</label><input type="text" name="locationCity" class="form-input" value="${escape(g.location.city)}" required></div>
               </div>
               <div class="form-group"><label class="form-label">🗺️ Address</label><input type="text" name="locationAddress" class="form-input" value="${escape(g.location.address || "")}"></div>
-              <div class="form-group"><label class="form-label">📅 Date & Time</label><input type="datetime-local" name="date" class="form-input" value="${dv.toISOString().slice(0, 16)}" required></div>
+              <div class="form-group"><label class="form-label">Date & Time</label><input type="datetime-local" name="date" class="form-input" value="${dv.toISOString().slice(0, 16)}" required></div>
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-4)">
                 <div class="form-group"><label class="form-label">👥 Min</label><input type="number" name="minPlayers" class="form-input" value="${g.minPlayers}" min="2" style="text-align:center"></div>
                 <div class="form-group"><label class="form-label">👥 Max</label><input type="number" name="maxPlayers" class="form-input" value="${g.maxPlayers}" min="${g.playerCount}" style="text-align:center"></div>
                 <div class="form-group"><label class="form-label">🎯 Skill</label><select name="skillLevel" class="form-select"><option ${g.skillLevel === "All Levels" ? "selected" : ""}>All Levels</option><option ${g.skillLevel === "Beginner" ? "selected" : ""}>Beginner</option><option ${g.skillLevel === "Intermediate" ? "selected" : ""}>Intermediate</option><option ${g.skillLevel === "Advanced" ? "selected" : ""}>Advanced</option></select></div>
               </div>
-              <div class="form-group"><label class="form-label">📝 Description</label><textarea name="description" class="form-textarea">${escape(g.description || "")}</textarea></div>
+              <div class="form-group"><label class="form-label">Description</label><textarea name="description" class="form-textarea">${escape(g.description || "")}</textarea></div>
               <div style="display:flex;gap:var(--space-4)">
                 <a href="/games/${g._id}" class="btn btn--outline" style="flex:1" data-link>Cancel</a>
-                <button type="submit" class="btn btn--primary" style="flex:2">💾 Save</button>
+                <button type="submit" class="btn btn--primary" style="flex:2">Save</button>
               </div>
             </form>
           </div>
@@ -315,7 +336,7 @@ export function registerGamesRoutes() {
             skillLevel: fd.get("skillLevel"),
             description: fd.get("description"),
           });
-          toast("success", "Saved! ✅");
+          toast("success", "Saved!");
           navigate("/games/" + id);
         } catch (err) {
           toast("error", err.message);
@@ -324,6 +345,6 @@ export function registerGamesRoutes() {
           btn.classList.remove("btn--loading");
         }
       };
-    })
+    }),
   );
 }

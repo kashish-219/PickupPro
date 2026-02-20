@@ -1,91 +1,113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PickupPro 🏀 - Find Your Game!</title>
-  
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Styles -->
-  <link rel="stylesheet" href="/css/style.css">
-  
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏀</text></svg>">
-</head>
-<body>
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="navbar__container">
-      <a href="/" class="navbar__logo" data-link>
-        <span class="navbar__logo-icon">🏀</span>
-        <span class="navbar__logo-text">PickupPro</span>
-      </a>
-      
-      <div class="navbar__menu">
-        <a href="/games" class="navbar__link" data-link>
-          <span class="navbar__link-icon">🎮</span>
-          <span>Games</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PickupPro 🏀 - Find Your Game!</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏀</text></svg>"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar__container">
+        <a href="/" class="navbar__logo" data-link>
+          <span class="navbar__logo-icon">🏀</span>
+          <span class="navbar__logo-text">PickupPro</span>
         </a>
-        <a href="/players" class="navbar__link" data-link>
-          <span class="navbar__link-icon">👥</span>
-          <span>Players</span>
-        </a>
-        <a href="/my-games" class="navbar__link navbar__link--auth" data-link style="display:none;">
-          <span class="navbar__link-icon">📋</span>
-          <span>My Games</span>
-        </a>
-      </div>
-      
-      <div class="navbar__actions">
-        <div class="navbar__auth-buttons" id="authButtons">
-          <a href="/login" class="btn btn--ghost" data-link>Log In</a>
-          <a href="/register" class="btn btn--primary" data-link>Sign Up</a>
+
+        <div class="navbar__menu">
+          <a href="/games" class="navbar__link" data-link>
+            <span class="navbar__link-icon">🏅</span>
+            <span>Games</span>
+          </a>
+          <a href="/players" class="navbar__link" data-link>
+            <span class="navbar__link-icon">👥</span>
+            <span>Players</span>
+          </a>
+          <a
+            href="/my-games"
+            class="navbar__link navbar__link--auth"
+            data-link
+            style="display: none"
+          >
+            <span class="navbar__link-icon">🏅</span>
+            <span>My Games</span>
+          </a>
         </div>
-        <div class="navbar__user" id="userMenu" style="display:none;">
-          <button class="navbar__user-btn" id="userMenuBtn">
-            <div class="navbar__user-avatar">👤</div>
-            <span class="navbar__user-name" id="userName">User</span>
-          </button>
-          <div class="navbar__dropdown" id="userDropdown">
-            <a href="/profile" class="navbar__dropdown-item" data-link>👤 Profile</a>
-            <a href="/my-games" class="navbar__dropdown-item" data-link>🎮 My Games</a>
-            <a href="/ratings/pending" class="navbar__dropdown-item" data-link>⭐ Rate Players</a>
-            <hr>
-            <button class="navbar__dropdown-item navbar__dropdown-item--logout" id="logoutBtn">🚪 Log Out</button>
+
+        <div class="navbar__actions">
+          <div class="navbar__auth-buttons" id="authButtons">
+            <a href="/login" class="btn btn--ghost" data-link>Log In</a>
+            <a href="/register" class="btn btn--primary" data-link>Sign Up</a>
+          </div>
+          <div class="navbar__user" id="userMenu" style="display: none">
+            <button class="navbar__user-btn" id="userMenuBtn">
+              <div class="navbar__user-avatar">👤</div>
+              <span class="navbar__user-name" id="userName">User</span>
+            </button>
+            <div class="navbar__dropdown" id="userDropdown">
+              <a href="/profile" class="navbar__dropdown-item" data-link
+                >👤 Profile</a
+              >
+              <a href="/my-games" class="navbar__dropdown-item" data-link
+                >My Games</a
+              >
+              <a href="/ratings/pending" class="navbar__dropdown-item" data-link
+                >⭐ Rate Players</a
+              >
+              <hr />
+              <button
+                class="navbar__dropdown-item navbar__dropdown-item--logout"
+                id="logoutBtn"
+              >
+                Log Out
+              </button>
+            </div>
           </div>
         </div>
+
+        <button class="navbar__toggle" id="navToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
-      
-      <button class="navbar__toggle" id="navToggle">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+    </nav>
+
+    <!-- Main App Container -->
+    <main class="main" id="app">
+      <div class="loader">
+        <div class="loader__ball">🏀</div>
+        <p>Loading...</p>
+      </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+      <div class="modal__backdrop" id="modalBackdrop"></div>
+      <div class="modal__content" id="modalContent"></div>
     </div>
-  </nav>
 
-  <!-- Main App Container -->
-  <main class="main" id="app">
-    <div class="loader">
-      <div class="loader__ball">🏀</div>
-      <p>Loading...</p>
-    </div>
-  </main>
-
-  <!-- Toast Container -->
-  <div class="toast-container" id="toastContainer"></div>
-
-  <!-- Modal -->
-  <div class="modal" id="modal">
-    <div class="modal__backdrop" id="modalBackdrop"></div>
-    <div class="modal__content" id="modalContent"></div>
-  </div>
-
-  <!-- Scripts -->
-  <script type="module" src="/js/app.js"></script>
-</body>
+    <!-- Scripts -->
+    <script type="module" src="/js/app.js"></script>
+  </body>
 </html>

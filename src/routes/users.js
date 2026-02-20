@@ -112,7 +112,8 @@ router.get("/", optionalAuth, async (req, res, next) => {
     if (minRating) {
       const minRatingNum = parseFloat(minRating);
       enhancedUsers = enhancedUsers.filter(
-        (u) => u.rating.avgRating >= minRatingNum || u.rating.totalRatings === 0
+        (u) =>
+          u.rating.avgRating >= minRatingNum || u.rating.totalRatings === 0,
       );
     }
 
@@ -351,7 +352,7 @@ router.put("/:id", authenticate, async (req, res, next) => {
       .findOneAndUpdate(
         { _id: new ObjectId(id) },
         { $set: updates },
-        { returnDocument: "after", projection: { password: 0 } }
+        { returnDocument: "after", projection: { password: 0 } },
       );
 
     if (!result) {
@@ -547,4 +548,4 @@ router.get("/:id/ratings", optionalAuth, async (req, res, next) => {
   }
 });
 
-export default router;  
+export default router;

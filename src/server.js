@@ -124,10 +124,10 @@ async function startServer() {
     // Start Express server
     const server = app.listen(PORT, () => {
       console.log("\n=========================================");
-      console.log("🏀 PickupPro Server Started");
+      console.log("PickupPro Server Started");
       console.log("=========================================");
-      console.log(`📍 URL: http://localhost:${PORT}`);
-      console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
+      console.log(`URL: http://localhost:${PORT}`);
+      console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
       console.log("=========================================\n");
     });
 
@@ -152,7 +152,7 @@ async function startServer() {
     process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
     process.on("SIGINT", () => gracefulShutdown("SIGINT"));
   } catch (error) {
-    console.error("❌ Failed to start server:", error);
+    console.error("Failed to start server:", error);
     process.exit(1);
   }
 }

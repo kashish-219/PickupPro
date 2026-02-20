@@ -10,14 +10,14 @@ PickupPro is a community-driven platform that connects local athletes looking to
 
 ## 📋 Project Information
 
-| | |
-|---|---|
-| **Authors** | Kashish Rahulbhai Khatri & Abhimanyu Dudeja |
-| **Course** | CS5610 Web Development |
-| **Institution** | Northeastern University - Khoury College |
-| **Class Link** | [CS5610 Web Development](https://johnguerra.co/classes/webDevelopment_spring_2025/) |
-| **Semester** | Spring 2025 |
-| **License** | MIT |
+|                 |                                                                                     |
+| --------------- | ----------------------------------------------------------------------------------- |
+| **Authors**     | Kashish Rahulbhai Khatri & Abhimanyu Dudeja                                         |
+| **Course**      | CS5610 Web Development                                                              |
+| **Institution** | Northeastern University - Khoury College                                            |
+| **Class Link**  | [CS5610 Web Development](https://johnguerra.co/classes/webDevelopment_spring_2025/) |
+| **Semester**    | Spring 2025                                                                         |
+| **License**     | MIT                                                                                 |
 
 ---
 
@@ -30,6 +30,7 @@ PickupPro solves the coordination problem for pickup sports games:
 - **For Cautious Players**: Check player reputations before joining to ensure a good experience
 
 ### Supported Sports
+
 🏀 Basketball • ⚽ Soccer • 🎾 Tennis • 🏐 Volleyball • ⚾ Baseball • 🏏 Cricket • 🏸 Badminton • 🏃 Running
 
 ---
@@ -37,6 +38,7 @@ PickupPro solves the coordination problem for pickup sports games:
 ## ✨ Features
 
 ### Games Management (Kashish Rahulbhai Khatri)
+
 - Create pickup games with sport, location, date, time, and player limits
 - Browse and filter games by sport, date, and location
 - Join games or automatically join waitlist when full
@@ -45,6 +47,7 @@ PickupPro solves the coordination problem for pickup sports games:
 - View and manage game rosters
 
 ### User Profiles & Reputation (Abhimanyu Dudeja)
+
 - Create and edit profile with sports interests and skill levels
 - Rate players on sportsmanship after completed games
 - View own profile with average rating and rating history
@@ -55,13 +58,13 @@ PickupPro solves the coordination problem for pickup sports games:
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| **Frontend** | Vanilla JavaScript, HTML5, CSS3 (Client-Side Rendering) |
-| **Backend** | Node.js, Express.js (ES Modules) |
-| **Database** | MongoDB (Native Driver - No Mongoose) |
-| **Authentication** | JWT (JSON Web Tokens) |
-| **Deployment** | Docker, Render.com |
+| Layer              | Technology                                              |
+| ------------------ | ------------------------------------------------------- |
+| **Frontend**       | Vanilla JavaScript, HTML5, CSS3 (Client-Side Rendering) |
+| **Backend**        | Node.js, Express.js (ES Modules)                        |
+| **Database**       | MongoDB (Native Driver - No Mongoose)                   |
+| **Authentication** | JWT (JSON Web Tokens)                                   |
+| **Deployment**     | Docker, Render.com                                      |
 
 ---
 
@@ -115,12 +118,14 @@ pickuppro/
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/yourusername/pickuppro.git
    cd pickuppro
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
@@ -134,11 +139,13 @@ pickuppro/
 ### Running with Docker (Recommended)
 
 1. **Start the application and MongoDB**
+
    ```bash
    docker-compose up -d
    ```
 
 2. **Seed the database with 1000+ games**
+
    ```bash
    docker-compose --profile seed up seed
    ```
@@ -156,16 +163,19 @@ pickuppro/
 1. **Start MongoDB** (must be running locally on port 27017)
 
 2. **Update .env**
+
    ```
    MONGODB_URI=mongodb://localhost:27017/pickuppro
    ```
 
 3. **Seed the database**
+
    ```bash
    npm run seed
    ```
 
 4. **Start the development server**
+
    ```bash
    npm run dev
    ```
@@ -188,11 +198,13 @@ The application uses 3 MongoDB collections:
 ### Seeding
 
 The seed script creates:
+
 - 100+ user accounts
 - **1000+ games** (historical and upcoming) - Boston area focused
 - Thousands of ratings for completed games
 
 **Demo Account:**
+
 - Email: `demo@pickuppro.com`
 - Password: `demo123`
 
@@ -201,6 +213,7 @@ The seed script creates:
 ## 🌐 Deployment to Render
 
 ### Prerequisites
+
 - [Render.com](https://render.com/) account
 - [MongoDB Atlas](https://www.mongodb.com/atlas) free cluster
 
@@ -214,12 +227,12 @@ The seed script creates:
    - Copy the connection string
 
 2. **Deploy to Render**
-   
+
    Option A: Using render.yaml
    - Push code to GitHub
    - Connect GitHub repo to Render
    - Use "Blueprint" to deploy from render.yaml
-   
+
    Option B: Manual setup
    - Create new "Web Service" on Render
    - Connect your GitHub repository
@@ -230,6 +243,7 @@ The seed script creates:
      - `NODE_ENV`: production
 
 3. **Seed Production Database**
+
    ```bash
    # Run seed script with production MongoDB URI
    MONGODB_URI="your-atlas-uri" npm run seed
@@ -243,39 +257,43 @@ The seed script creates:
 ## 📝 API Documentation
 
 ### Authentication
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register new user |
-| POST | `/api/auth/login` | Login user |
-| GET | `/api/auth/me` | Get current user |
+
+| Method | Endpoint             | Description       |
+| ------ | -------------------- | ----------------- |
+| POST   | `/api/auth/register` | Register new user |
+| POST   | `/api/auth/login`    | Login user        |
+| GET    | `/api/auth/me`       | Get current user  |
 
 ### Games (Kashish Rahulbhai Khatri)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/games` | List games with filters |
-| GET | `/api/games/:id` | Get game details |
-| POST | `/api/games` | Create game |
-| PUT | `/api/games/:id` | Update game |
-| DELETE | `/api/games/:id` | Cancel game |
-| POST | `/api/games/:id/join` | Join game/waitlist |
-| POST | `/api/games/:id/leave` | Leave game |
-| PUT | `/api/games/:id/complete` | Mark completed |
+
+| Method | Endpoint                  | Description             |
+| ------ | ------------------------- | ----------------------- |
+| GET    | `/api/games`              | List games with filters |
+| GET    | `/api/games/:id`          | Get game details        |
+| POST   | `/api/games`              | Create game             |
+| PUT    | `/api/games/:id`          | Update game             |
+| DELETE | `/api/games/:id`          | Cancel game             |
+| POST   | `/api/games/:id/join`     | Join game/waitlist      |
+| POST   | `/api/games/:id/leave`    | Leave game              |
+| PUT    | `/api/games/:id/complete` | Mark completed          |
 
 ### Users (Abhimanyu Dudeja)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/users` | Search users |
-| GET | `/api/users/:id` | Get user profile |
-| PUT | `/api/users/:id` | Update profile |
-| GET | `/api/users/:id/games` | User's game history |
-| GET | `/api/users/:id/ratings` | User's ratings |
+
+| Method | Endpoint                 | Description         |
+| ------ | ------------------------ | ------------------- |
+| GET    | `/api/users`             | Search users        |
+| GET    | `/api/users/:id`         | Get user profile    |
+| PUT    | `/api/users/:id`         | Update profile      |
+| GET    | `/api/users/:id/games`   | User's game history |
+| GET    | `/api/users/:id/ratings` | User's ratings      |
 
 ### Ratings (Abhimanyu Dudeja)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/ratings` | Rate a player |
-| GET | `/api/ratings/game/:id` | Ratings for a game |
-| GET | `/api/ratings/pending` | Pending ratings |
+
+| Method | Endpoint                | Description        |
+| ------ | ----------------------- | ------------------ |
+| POST   | `/api/ratings`          | Rate a player      |
+| GET    | `/api/ratings/game/:id` | Ratings for a game |
+| GET    | `/api/ratings/pending`  | Pending ratings    |
 
 ---
 
@@ -317,4 +335,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-*Built with ❤️ for CS5610 Web Development at Northeastern University*
+_Built with ❤️ for CS5610 Web Development at Northeastern University_

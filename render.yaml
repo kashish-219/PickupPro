@@ -17,12 +17,12 @@ services:
       - key: PORT
         value: "3000"
       - key: MONGODB_URI
-        sync: false  # Set this manually in Render dashboard
+        sync: false # Set this manually in Render dashboard
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRES_IN
         value: "7d"
       - key: CORS_ORIGINS
-        sync: false  # Set to your Render URL
+        sync: false # Set to your Render URL
     healthCheckPath: /api/health
     autoDeploy: true

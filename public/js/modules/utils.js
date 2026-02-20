@@ -1,6 +1,7 @@
 /**
  * MODULE: utils
  * Shared constants and utility functions.
+ * Created by: Kashish Rahulbhai Khatri & Abhimanyu Dudeja
  */
 export const SPORTS = [
   { name: "Basketball", emoji: "🏀", color: "#FF6B35" },

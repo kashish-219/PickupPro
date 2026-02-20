@@ -1,5 +1,6 @@
 /**
  * PICKUPPRO - APPLICATION ENTRY POINT
+ * Created by: Kashish Rahulbhai Khatri & Abhimanyu Dudeja
  *
  * modules/api.js        - API fetch wrapper
  * modules/utils.js      - Constants, helpers
@@ -54,7 +55,7 @@ async function init() {
     const { setCurrentUser } = await import("./modules/auth.js");
     setCurrentUser(null);
     updateAuthUI();
-    toast("info", "Bye! 👋");
+    toast("info", "Bye!");
     navigate("/");
   };
   const backdrop = document.querySelector("#modalBackdrop");

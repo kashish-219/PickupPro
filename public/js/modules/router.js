@@ -1,6 +1,7 @@
 /**
  * MODULE: router
  * Client-side SPA router using the history API.
+ * Created by: Kashish Rahulbhai Khatri
  */
 import { floatingBalls, escape } from "./utils.js";
 
@@ -42,7 +43,7 @@ export async function handleRoute() {
       return;
     }
   }
-  app.innerHTML = `${floatingBalls}<div class="empty-state"><div class="empty-state__icon">🔍</div><h3>Not Found</h3><p>Page doesn't exist</p><a href="/" class="btn btn--primary" data-link>Go Home</a></div>`;
+  app.innerHTML = `${floatingBalls}<div class="empty-state"><div class="empty-state__icon">🏅</div><h3>Not Found</h3><p>Page doesn't exist</p><a href="/" class="btn btn--primary" data-link>Go Home</a></div>`;
 }
 
 export function render(html) {

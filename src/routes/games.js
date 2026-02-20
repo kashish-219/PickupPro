@@ -221,7 +221,7 @@ router.get("/", optionalAuth, async (req, res, next) => {
     const hostsMap = {};
     hosts.forEach((host) => {
       const rating = hostRatings.find(
-        (r) => r._id.toString() === host._id.toString()
+        (r) => r._id.toString() === host._id.toString(),
       );
       hostsMap[host._id.toString()] = {
         ...host,
@@ -246,7 +246,7 @@ router.get("/", optionalAuth, async (req, res, next) => {
         enhanced.isHost = game.hostId.toString() === userId;
         enhanced.isPlayer = game.players?.some((p) => p.toString() === userId);
         enhanced.isWaitlisted = game.waitlist?.some(
-          (p) => p.toString() === userId
+          (p) => p.toString() === userId,
         );
         enhanced.waitlistPosition = enhanced.isWaitlisted
           ? game.waitlist.findIndex((p) => p.toString() === userId) + 1
@@ -339,10 +339,10 @@ router.get("/:id", optionalAuth, async (req, res, next) => {
       const userId = req.user._id.toString();
       enhancedGame.isHost = game.hostId.toString() === userId;
       enhancedGame.isPlayer = game.players?.some(
-        (p) => p.toString() === userId
+        (p) => p.toString() === userId,
       );
       enhancedGame.isWaitlisted = game.waitlist?.some(
-        (p) => p.toString() === userId
+        (p) => p.toString() === userId,
       );
       enhancedGame.waitlistPosition = enhancedGame.isWaitlisted
         ? game.waitlist.findIndex((p) => p.toString() === userId) + 1
@@ -380,7 +380,7 @@ router.post("/", authenticate, async (req, res, next) => {
     if (!sport || !VALID_SPORTS.includes(sport)) {
       throw new AppError(
         `Invalid sport. Must be one of: ${VALID_SPORTS.join(", ")}`,
-        400
+        400,
       );
     }
 
@@ -415,14 +415,14 @@ router.post("/", authenticate, async (req, res, next) => {
     if (min < 1 || min > max) {
       throw new AppError(
         "Min players must be at least 1 and not exceed max",
-        400
+        400,
       );
     }
 
     if (skillLevel && !VALID_SKILL_LEVELS.includes(skillLevel)) {
       throw new AppError(
         `Invalid skill level. Must be one of: ${VALID_SKILL_LEVELS.join(", ")}`,
-        400
+        400,
       );
     }
 
@@ -514,7 +514,7 @@ router.put("/:id", authenticate, async (req, res, next) => {
       if (!VALID_SPORTS.includes(sport)) {
         throw new AppError(
           `Invalid sport. Must be one of: ${VALID_SPORTS.join(", ")}`,
-          400
+          400,
         );
       }
       updates.sport = sport;
@@ -563,7 +563,7 @@ router.put("/:id", authenticate, async (req, res, next) => {
       if (max < game.players.length) {
         throw new AppError(
           `Cannot set max players below current player count (${game.players.length})`,
-          400
+          400,
         );
       }
       updates.maxPlayers = max;
@@ -575,7 +575,7 @@ router.put("/:id", authenticate, async (req, res, next) => {
       if (min < 1 || min > max) {
         throw new AppError(
           "Min players must be at least 1 and not exceed max",
-          400
+          400,
         );
       }
       updates.minPlayers = min;
@@ -585,7 +585,7 @@ router.put("/:id", authenticate, async (req, res, next) => {
       if (!VALID_SKILL_LEVELS.includes(skillLevel)) {
         throw new AppError(
           `Invalid skill level. Must be one of: ${VALID_SKILL_LEVELS.join(", ")}`,
-          400
+          400,
         );
       }
       updates.skillLevel = skillLevel;
@@ -597,7 +597,7 @@ router.put("/:id", authenticate, async (req, res, next) => {
       .findOneAndUpdate(
         { _id: new ObjectId(id) },
         { $set: updates },
-        { returnDocument: "after" }
+        { returnDocument: "after" },
       );
 
     res.json({
@@ -655,7 +655,7 @@ router.delete("/:id", authenticate, async (req, res, next) => {
           status: "cancelled",
           updatedAt: new Date(),
         },
-      }
+      },
     );
 
     res.json({
@@ -700,7 +700,6 @@ router.post("/:id/join", authenticate, async (req, res, next) => {
       throw new AppError("Cannot join a game that has already started", 400);
     }
 
-
     // Check if already a player
     if (game.players.some((p) => p.toString() === userId.toString())) {
       throw new AppError("You have already joined this game", 400);
@@ -721,7 +720,7 @@ router.post("/:id/join", authenticate, async (req, res, next) => {
         {
           $push: { waitlist: userId },
           $set: { updatedAt: new Date() },
-        }
+        },
       );
 
       const waitlistPosition = game.waitlist.length + 1;
@@ -741,7 +740,7 @@ router.post("/:id/join", authenticate, async (req, res, next) => {
         {
           $push: { players: userId },
           $set: { updatedAt: new Date() },
-        }
+        },
       );
 
       res.json({
@@ -786,10 +785,10 @@ router.post("/:id/leave", authenticate, async (req, res, next) => {
     }
 
     const isPlayer = game.players.some(
-      (p) => p.toString() === userId.toString()
+      (p) => p.toString() === userId.toString(),
     );
     const isWaitlisted = game.waitlist.some(
-      (p) => p.toString() === userId.toString()
+      (p) => p.toString() === userId.toString(),
     );
 
     if (!isPlayer && !isWaitlisted) {
@@ -803,7 +802,7 @@ router.post("/:id/leave", authenticate, async (req, res, next) => {
         {
           $pull: { waitlist: userId },
           $set: { updatedAt: new Date() },
-        }
+        },
       );
 
       res.json({
@@ -830,7 +829,7 @@ router.post("/:id/leave", authenticate, async (req, res, next) => {
             $push: { players: promotedUser },
             $pull: { waitlist: promotedUser },
             $set: { updatedAt: new Date() },
-          }
+          },
         );
       }
 
@@ -887,7 +886,7 @@ router.put("/:id/complete", authenticate, async (req, res, next) => {
           status: "completed",
           updatedAt: new Date(),
         },
-      }
+      },
     );
 
     res.json({

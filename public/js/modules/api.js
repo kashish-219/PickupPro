@@ -1,6 +1,7 @@
 /**
  * MODULE: api
  * All fetch calls to the backend. Exports: api(), Auth, Games, Users, Ratings
+ * Created by: Kashish Rahulbhai Khatri & Abhimanyu Dudeja
  */
 const API_BASE = "/api";
 

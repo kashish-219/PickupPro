@@ -35,14 +35,14 @@ export async function connectToDatabase() {
     const dbName = new URL(uri).pathname.slice(1) || "pickuppro";
     db = client.db(dbName);
 
-    console.log(`✅ Connected to MongoDB database: ${dbName}`);
+    console.log(`Connected to MongoDB database: ${dbName}`);
 
     // Create indexes
     await createIndexes(db);
 
     return db;
   } catch (error) {
-    console.error("❌ Failed to connect to MongoDB:", error.message);
+    console.error("Failed to connect to MongoDB:", error.message);
     throw error;
   }
 }
@@ -66,7 +66,7 @@ export async function closeConnection() {
     await client.close();
     client = null;
     db = null;
-    console.log("🔌 MongoDB connection closed");
+    console.log("MongoDB connection closed");
   }
 }
 
@@ -97,12 +97,12 @@ async function createIndexes(database) {
     await ratingsCollection.createIndex({ toUserId: 1 });
     await ratingsCollection.createIndex(
       { fromUserId: 1, toUserId: 1, gameId: 1 },
-      { unique: true }
+      { unique: true },
     );
 
-    console.log("✅ Database indexes created successfully");
+    console.log("Database indexes created successfully");
   } catch (error) {
-    console.error("⚠️ Error creating indexes:", error.message);
+    console.error("Error creating indexes:", error.message);
   }
 }
 

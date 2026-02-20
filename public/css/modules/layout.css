@@ -1,20 +1,109 @@
 /* MODULE: layout */
-.floating-balls { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
-.floating-balls span { position: absolute; font-size: 2.5rem; opacity: 0.12; animation: floatBall var(--d, 8s) ease-in-out infinite; animation-delay: var(--t, 0s); }
-@keyframes floatBall { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-25px) rotate(8deg); } }
-.main { min-height: calc(100vh - var(--navbar-height)); padding-top: var(--navbar-height); position: relative; z-index: 1; }
-.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 var(--space-4); }
-.section { padding: var(--space-12) 0; }
-.page-header { text-align: center; margin-bottom: var(--space-8); }
-.page-header h2 { font-size: 2rem; margin-bottom: var(--space-2); }
-.page-header p { color: var(--gray-500); }
-.grid { display: grid; gap: var(--space-6); }
-.grid--games { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
-.grid--players { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-.hero { padding: var(--space-16) 0; text-align: center; }
-.hero h1 { font-size: 2.8rem; margin-bottom: var(--space-4); }
-.hero p { font-size: 1.15rem; color: var(--gray-600); margin-bottom: var(--space-8); max-width: 550px; margin-left: auto; margin-right: auto; }
-.hero__sports { display: flex; justify-content: center; gap: var(--space-3); margin-bottom: var(--space-8); flex-wrap: wrap; }
-.hero__sport { width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; background: var(--white); border-radius: var(--radius-xl); font-size: 1.6rem; box-shadow: var(--shadow-md); transition: var(--bounce); cursor: pointer; }
-.hero__sport:hover { transform: translateY(-6px) scale(1.1); box-shadow: var(--shadow-lg); }
-.hero__cta { display: flex; justify-content: center; gap: var(--space-4); flex-wrap: wrap; }
+.floating-balls {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.floating-balls span {
+  position: absolute;
+  font-size: 2.5rem;
+  opacity: 0.12;
+  animation: floatBall var(--d, 8s) ease-in-out infinite;
+  animation-delay: var(--t, 0s);
+}
+@keyframes floatBall {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-25px) rotate(8deg);
+  }
+}
+.main {
+  min-height: calc(100vh - var(--navbar-height));
+  padding-top: var(--navbar-height);
+  position: relative;
+  z-index: 1;
+}
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+.section {
+  padding: var(--space-12) 0;
+}
+.page-header {
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+.page-header h2 {
+  font-size: 2rem;
+  margin-bottom: var(--space-2);
+}
+.page-header p {
+  color: var(--gray-500);
+}
+.grid {
+  display: grid;
+  gap: var(--space-6);
+}
+.grid--games {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.grid--players {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+.hero {
+  padding: var(--space-16) 0;
+  text-align: center;
+}
+.hero h1 {
+  font-size: 2.8rem;
+  margin-bottom: var(--space-4);
+}
+.hero p {
+  font-size: 1.15rem;
+  color: var(--gray-600);
+  margin-bottom: var(--space-8);
+  max-width: 550px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hero__sports {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+  flex-wrap: wrap;
+}
+.hero__sport {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  font-size: 1.6rem;
+  box-shadow: var(--shadow-md);
+  transition: var(--bounce);
+  cursor: pointer;
+}
+.hero__sport:hover {
+  transform: translateY(-6px) scale(1.1);
+  box-shadow: var(--shadow-lg);
+}
+.hero__cta {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
