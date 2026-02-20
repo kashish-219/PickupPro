@@ -15,8 +15,8 @@ PickupPro is a community-driven platform that connects local athletes looking to
 | **Authors**     | Kashish Rahulbhai Khatri & Abhimanyu Dudeja                                         |
 | **Course**      | CS5610 Web Development                                                              |
 | **Institution** | Northeastern University - Khoury College                                            |
-| **Class Link**  | [CS5610 Web Development](https://johnguerra.co/classes/webDevelopment_spring_2025/) |
-| **Semester**    | Spring 2025                                                                         |
+| **Class Link**  | [CS5610 Web Development](https://johnguerra.co/classes/webDevelopment_online_spring_2026/) |
+| **Semester**    | Spring 2026                                                                         |
 | **License**     | MIT                                                                                 |
 
 ---
