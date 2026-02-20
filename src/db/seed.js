@@ -453,17 +453,27 @@ function generateGames(users, count) {
     const maxPlayers = sport === "Tennis" ? 4 : randomInt(6, 16);
     const minPlayers = Math.max(2, Math.floor(maxPlayers / 2));
 
-    // Generate game date
-    const gameDate = randomDate(oneYearAgo, threeMonthsFromNow);
+    // Decide status first, then generate appropriate date
+    // ~70% completed/cancelled (past), ~30% upcoming (future)
+    let status;
+    let gameDate;
+
+    if (i < count * 0.7) {
+      // Past games: 1 year ago to 3 days ago
+      const threeDaysAgo = new Date(now);
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+      gameDate = randomDate(oneYearAgo, threeDaysAgo);
+      status = Math.random() < 0.9 ? "completed" : "cancelled";
+    } else {
+      // Future games: 1 day from now to 3 months from now
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      gameDate = randomDate(tomorrow, threeMonthsFromNow);
+      status = "upcoming";
+    }
 
     // Set game time (between 6am and 9pm)
     gameDate.setHours(randomInt(6, 21), randomInt(0, 1) * 30, 0, 0);
-
-    // Determine status based on date
-    let status = "upcoming";
-    if (gameDate < now) {
-      status = Math.random() < 0.9 ? "completed" : "cancelled";
-    }
 
     // Generate players for the game
     const numPlayers =
@@ -658,9 +668,6 @@ async function seed() {
     console.log(`Games created: ${games.length}`);
     console.log(`Ratings created: ${ratings.length}`);
     console.log("=====================================");
-    console.log("\nDemo account:");
-    console.log("   Email: demo@pickuppro.com");
-    console.log("   Password: demo123");
     console.log("=====================================\n");
   } catch (error) {
     console.error("Seed failed:", error);

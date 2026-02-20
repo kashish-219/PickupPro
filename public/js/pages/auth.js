@@ -31,7 +31,6 @@ export function registerAuthRoutes() {
             </form>
             <div style="text-align:center;margin-top:var(--space-6);padding-top:var(--space-6);border-top:2px dashed var(--gray-200)">
               <p style="color:var(--gray-500);margin-bottom:var(--space-4)">New here? <a href="/register" data-link style="color:var(--primary);font-weight:700">Join!</a></p>
-              <div style="padding:var(--space-3);background:var(--gray-50);border-radius:var(--radius-lg)"><p style="font-size:0.8rem;color:var(--gray-600)"><strong>🎯 Demo:</strong> demo@pickuppro.com / demo123</p></div>
             </div>
           </div>
         </div>
