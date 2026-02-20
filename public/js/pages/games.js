@@ -31,12 +31,13 @@ export function registerGamesRoutes() {
         </div>
         <div class="filter-bar">
           <div class="filter-bar__group"><label>Status</label><select id="filterStatus"><option value="upcoming">Upcoming</option><option value="completed">Completed</option><option value="">All</option></select></div>
+          <div class="filter-bar__group"><label>Date</label><input type="date" id="filterDate"></div>
           <div class="filter-bar__group"><label>City</label><input type="text" id="filterCity" placeholder="Any city"></div>
           <div class="filter-bar__actions"><button class="btn btn--primary" id="searchBtn">🔍 Search</button></div>
         </div>
         <div class="grid grid--games" id="gamesList"><div class="loader"><div class="loader__ball">🏀</div></div></div>
       </div></section>`);
-    let sport = "";
+    let sport = new URLSearchParams(location.search).get("sport") || "";
     async function load() {
       const list = $("#gamesList");
       list.innerHTML =
@@ -46,6 +47,7 @@ export function registerGamesRoutes() {
           sport,
           status: $("#filterStatus").value,
           city: $("#filterCity").value,
+        startDate: $("#filterDate").value ? new Date(new Date($("#filterDate").value).getTime() + 18000000).toISOString() : "", endDate: $("#filterDate").value ? new Date(new Date($("#filterDate").value).getTime() + 18000000 + 86400000 - 1).toISOString() : "",
           limit: 20,
         };
         Object.keys(f).forEach((k) => !f[k] && delete f[k]);
@@ -57,10 +59,12 @@ export function registerGamesRoutes() {
         list.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><p>${e.message}</p></div>`;
       }
     }
+    if (sport) { $$(".filter-btn").forEach((b) => b.classList.toggle("active", b.dataset.sport === sport)); }
     $$(".filter-btn").forEach(
       (b) =>
         (b.onclick = () => {
-          $$(".filter-btn").forEach((x) => x.classList.remove("active"));
+          if (sport) { $$(".filter-btn").forEach((b) => b.classList.toggle("active", b.dataset.sport === sport)); }
+    $$(".filter-btn").forEach((x) => x.classList.remove("active"));
           b.classList.add("active");
           sport = b.dataset.sport;
           load();
