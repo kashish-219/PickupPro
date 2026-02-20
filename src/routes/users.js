@@ -28,6 +28,7 @@ const VALID_SPORTS = [
   "Cricket",
   "Badminton",
   "Running",
+  "Other",
 ];
 
 const VALID_SKILL_LEVELS = ["Beginner", "Intermediate", "Advanced"];
@@ -546,4 +547,4 @@ router.get("/:id/ratings", optionalAuth, async (req, res, next) => {
   }
 });
 
-export default router;
+export default router;  

@@ -33,6 +33,7 @@
 .game-card__status--open { color: var(--success); }
 .game-card__status--full { color: var(--warning); }
 .game-card__status--completed { color: var(--gray-500); }
+.game-card__status--cancelled { color: var(--danger, #EF4444); }
 .game-card__mascot { position: absolute; right: -10px; bottom: -25px; font-size: 110px; opacity: 0.35; transition: var(--bounce); pointer-events: none; }
 .game-card:hover .game-card__mascot { transform: scale(1.1) rotate(-5deg); }
 .game-card__body { padding: var(--space-5); }

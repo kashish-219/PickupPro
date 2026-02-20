@@ -700,10 +700,6 @@ router.post("/:id/join", authenticate, async (req, res, next) => {
       throw new AppError("Cannot join a game that has already started", 400);
     }
 
-    // Check if user is the host
-    if (game.hostId.toString() === userId.toString()) {
-      throw new AppError("You cannot join your own game", 400);
-    }
 
     // Check if already a player
     if (game.players.some((p) => p.toString() === userId.toString())) {

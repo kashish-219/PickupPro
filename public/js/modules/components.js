@@ -18,8 +18,8 @@ export function GameCard(g) {
   const full = g.playerCount >= g.maxPlayers;
   const offset = 113 - (113 * pct) / 100;
   const statusCls =
-    g.status === "completed" ? "completed" : full ? "full" : "open";
-  const statusTxt = g.status === "completed" ? "Done" : full ? "Full" : "Open";
+    g.status === "completed" ? "completed" : g.status === "cancelled" ? "cancelled" : full ? "full" : "open";
+  const statusTxt = g.status === "completed" ? "Done" : g.status === "cancelled" ? "Cancelled" : full ? "Full" : "Open";
   const fillCls = pct >= 100 ? "full" : pct >= 75 ? "warning" : "";
   return `
     <div class="game-card game-card--${cls}" onclick="navigate('/games/${g._id}')">
@@ -42,7 +42,7 @@ export function GameCard(g) {
         ${g.host ? `<div class="game-card__host"><div class="game-card__host-avatar">👤</div><div><div class="game-card__host-name">${escape(g.host.name)}</div><div class="game-card__host-rating">⭐ ${(g.host.rating?.avgRating || 0).toFixed(1)}</div></div></div>` : ""}
       </div>
       <div class="game-card__footer">
-        <button class="game-card__cta game-card__cta--${full ? "view" : "join"}" onclick="event.stopPropagation();navigate('/games/${g._id}')">${full ? "👁️ View" : "🎮 Join"}</button>
+        <button class="game-card__cta game-card__cta--${full || g.status === 'cancelled' || g.status === 'completed' ? "view" : "join"}" onclick="event.stopPropagation();navigate('/games/${g._id}')">${full || g.status === 'cancelled' || g.status === 'completed' ? "👁️ View" : "🎮 Join"}</button>
       </div>
     </div>`;
 }
