@@ -28,6 +28,7 @@ const VALID_SPORTS = [
   "Cricket",
   "Badminton",
   "Running",
+  "Other",
 ];
 
 const VALID_SKILL_LEVELS = [
