@@ -85,7 +85,7 @@ export function registerUserRoutes() {
     ]);
     const { user, stats, recentRatings } = r.data;
     const fixtures = fixturesRes.data.games || [];
-    const isOwnProfile = currentUser && currentUser._id === id;
+    const isOwnProfile = currentUser && currentUser._id.toString() === id.toString();
 
     const fixturesHtml = fixtures.length
       ? fixtures
