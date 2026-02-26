@@ -345,7 +345,7 @@ export function registerUserRoutes() {
                 });
                 if (!res.ok) {
                   const d = await res.json();
-                  throw new Error(d.message || "Failed");
+                  throw new Error(d.error || d.message || "Failed");
                 }
                 toast("success", "Rated! ⭐");
                 box.style.opacity = "0.5";
